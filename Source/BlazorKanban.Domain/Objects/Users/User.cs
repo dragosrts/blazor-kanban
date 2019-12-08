@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BlazorKanban.Domain.Bugs
+namespace BlazorKanban.Domain.Objects.Users
 {
-    class Bug
+    class User
     {
     }
 }

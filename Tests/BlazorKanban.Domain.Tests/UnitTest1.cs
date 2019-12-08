@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace BlazorKanban.Domain.Tests
+namespace BlazorKanban.Domain.Objects.Tests
 {
     public class UnitTest1
     {

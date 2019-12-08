@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BlazorKanban.Domain.Teams
+namespace BlazorKanban.Domain.Objects.Teams
 {
     class Team
     {

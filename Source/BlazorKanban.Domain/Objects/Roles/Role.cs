@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BlazorKanban.Domain.Projects
+namespace BlazorKanban.Domain.Objects.Roles
 {
-    class Project
+    class Role
     {
     }
 }

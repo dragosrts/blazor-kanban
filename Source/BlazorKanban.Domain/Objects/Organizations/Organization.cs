@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BlazorKanban.Domain.Tasks
+namespace BlazorKanban.Domain.Objects.Organizations
 {
-    class Task
+    class Organization
     {
     }
 }

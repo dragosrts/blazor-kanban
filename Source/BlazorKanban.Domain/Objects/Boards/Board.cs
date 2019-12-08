@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BlazorKanban.Domain.Epics
+namespace BlazorKanban.Domain.Objects.Boards
 {
-    class Epic
+    class Board
     {
     }
 }
