@@ -1,0 +1,10 @@
+﻿
+
+ProjectsController	-- show projects available after user is logged in 
+
+BoardsController	-- to be shown in menu
+BacklogsController	-- to be shown in menu
+
+URLs
+{BASE_ADDRESS}/{USER_ID}
+

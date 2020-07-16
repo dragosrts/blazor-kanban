@@ -6,14 +6,44 @@ Organisations
     -.Roles
 
 
-Teams
-Projects
-  Boards
-	Swiming Lanes ???
-  Backlogs
+Boards
+    Columns (or Lists)
+        Cards (or Items)
 
-  Epics
-    -.Stories
-      -.Tasks
-    -.Bugs
-      -.Tasks
+        
+Users       -- mm --    Boards
+Boards      -- 1m --    Columns
+Columns     -- 1m --    Cards
+
+
+Complete Picture (maybe for future reference):
+    - can contain the notion of a team
+
+Organisations
+  -.Users
+    -.Roles
+
+
+Projects
+    Boards
+        Columns
+            Items
+                Tasks
+                Bugs
+    Backlogs
+        Items
+            Tasks
+            Bugs
+
+
+
+Users       -- mm --    Projects
+Projects    -- 1m --    Boards
+Projects    -- 1m --    Backlogs
+Boards      -- 11 --    Backlogs
+Boards      -- 1m --    Columns
+Backlogs    -- 1m --    Items
+Columns     -- 1m --    Items
+Items       -- 1m --    Tasks
+Items       -- 1m --    Bugs
+
