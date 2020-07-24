@@ -1,15 +1,36 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager navigationManager
 
-<div class="sidebar">
-    <NavMenu />
-</div>
 
-<div class="main">
-    <div class="top-row px-4">
-        <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
-    </div>
+    <header class="drawer-header">
+        <div class="drawer-logo">
+            <img alt="Blazor" class="logo-img" src="~/icon-512.png" title="Blazor">
+            <a class="miniHover" href="/">Blazor</a>
+        </div>
+    </header>
 
-    <div class="content px-4">
+
+    <section class="container-fluid">
         @Body
-    </div>
-</div>
+    </section>
+
+    @code {
+        bool appBarFixed = true;
+        bool navMenuOpened = true;
+        public string bbDrawerClass = "";
+
+        void NavToggle()
+        {
+            navMenuOpened = !navMenuOpened;
+            if (navMenuOpened)
+            {
+                bbDrawerClass = "full";
+            }
+            else
+            {
+                bbDrawerClass = "closed";
+            }
+
+            this.StateHasChanged();
+        }
+    }

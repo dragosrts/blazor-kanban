@@ -7,8 +7,8 @@ Organisations
 
 
 Boards
-    Columns (or Lists)
-        Cards (or Items)
+    Columns (or Lists or TaskList or TaskColumn)
+        Cards (or Items or TaskCard)
 
         
 Users       -- mm --    Boards

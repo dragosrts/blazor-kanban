@@ -1,4 +1,4 @@
-﻿@*@page "/boards"
+﻿@page "/boards"
 @using BlazorKanban.Shared
 @using BlazorKanban.Client.Pages.Jobs
 
@@ -24,8 +24,14 @@ else
                         <div class="card bg-light">
                             <div class="card-body">
                                 <h6 class="card-title text-uppercase text-truncate py-2">@column.Title</h6>
+                                <div></div>
                                 <div class="items border border-light">
-                                    <div class="dropzone rounded" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="clearDrop(event)"> &nbsp; </div>
+                                    @*<div class="dropzone rounded"
+                                             ondrop="drop(event)"
+                                             ondragover="allowDrop(event)"
+                                             ondragleave="clearDrop(event)">
+                                        </div>*@
+
                                     @foreach (var card in column.Cards)
                                     {
                                         <div class="card draggable shadow-sm" id="@card.Id" draggable="true" ondragstart="drag(event)">
@@ -40,8 +46,13 @@ else
                                                 <button class="btn btn-primary btn-sm">View</button>
                                             </div>
                                         </div>
-                                        <div class="dropzone rounded" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="clearDrop(event)"> &nbsp; </div>
+                                        <div class="dropzone rounded"
+                                                 ondrop="drop(event)"
+                                                 ondragover="allowDrop(event)"
+                                                 ondragleave="clearDrop(event)">
+                                            </div>
                                     }
+
                                 </div>
                             </div>
                         </div>
@@ -59,4 +70,46 @@ else
     {
         boards = await Http.GetFromJsonAsync<TaskBoard[]>("api/boards");
     }
-}*@
+
+
+    //[CascadingParameter] JobsContainer Container { get; set; }
+    //[Parameter] public JobStatuses ListStatus { get; set; }
+    //[Parameter] public JobStatuses[] AllowedStatuses { get; set; }
+
+    //List<JobDto> Jobs = new List<JobDto>();
+    //string dropClass = "";
+
+    //protected override void OnParametersSet()
+    //{
+    //    Jobs.Clear();
+    //    Jobs.AddRange(Container.Jobs.Where(x => x.Status == ListStatus));
+    //}
+
+    //private void HandleDragEnter()
+    //{
+    //    if (ListStatus == Container.Payload.Status) return;
+
+    //    if (AllowedStatuses != null && !AllowedStatuses.Contains(Container.Payload.Status))
+    //    {
+    //        dropClass = "no-drop";
+    //    }
+    //    else
+    //    {
+    //        dropClass = "can-drop";
+    //    }
+    //}
+
+    //private void HandleDragLeave()
+    //{
+    //    dropClass = "";
+    //}
+
+    //private async Task HandleDrop()
+    //{
+    //    dropClass = "";
+
+    //    if (AllowedStatuses != null && !AllowedStatuses.Contains(Container.Payload.Status)) return;
+
+    //    await Container.UpdateJobAsync(ListStatus);
+    //}
+}

@@ -1,6 +1,6 @@
 ﻿namespace BlazorKanban.Shared
 {
-    public class Card
+    public class TaskCard
     {
         public int Id { get; set; }
 
