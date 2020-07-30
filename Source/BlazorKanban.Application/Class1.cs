@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BlazorKanban.Application
+﻿namespace BlazorKanban.Application
 {
     public class Class1
     {

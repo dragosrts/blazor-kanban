@@ -47,11 +47,12 @@ else
                                             </div>
                                         </div>
                                         <div class="dropzone rounded"
-                                                 ondrop="drop(event)"
-                                                 ondragover="allowDrop(event)"
-                                                 ondragleave="clearDrop(event)">
-                                            </div>
+                                             ondrop="drop(event)"
+                                             ondragover="allowDrop(event)"
+                                             ondragleave="clearDrop(event)">
+                                        </div>
                                     }
+                                    <button class="btn btn-primary btn-sm">Add</button>
 
                                 </div>
                             </div>
@@ -68,7 +69,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        boards = await Http.GetFromJsonAsync<TaskBoard[]>("api/boards");
+        boards = await Http.GetFromJsonAsync<TaskBoard[]>("api/taskboards");
     }
 
 

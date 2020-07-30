@@ -5,6 +5,6 @@ namespace BlazorKanban.Domain.Objects.Backlogs
 {
     public class Backlog
     {
-        public  List<Epic> Epics { get; set; }
+        public List<Epic> Epics { get; set; }
     }
 }
