@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using BlazorKanban.Client.Shared.Components.DragDrop
 
 <h1>Hello, world!</h1>
 
@@ -12,3 +13,31 @@ Welcome to your new app.
         </a>
     </div>
 </div>
+
+
+
+@*<div id="main" class="container-fluid">
+    <p>Drag the list items:</p>
+    <ul>
+        <Dropzone>
+            <Draggable>
+                <li class="list-group-item">Cras justo odio (order-pos: @context.OrderPosition)</li>
+            </Draggable>
+            <Draggable>
+                <li class="list-group-item">Dapibus ac facilisis in (order-pos: @context.OrderPosition)</li>
+            </Draggable>
+            <Draggable>
+                <li class="list-group-item">Morbi leo risus (order-pos: @context.OrderPosition)</li>
+            </Draggable>
+            <Draggable>
+                <li class="list-group-item">Porta ac consectetur ac (order-pos: @context.OrderPosition)</li>
+            </Draggable>
+            <Draggable>
+                <li class="list-group-item">Vestibulum at eros (order-pos: @context.OrderPosition)</li>
+            </Draggable>
+        </Dropzone>
+    </ul>
+</div>
+<hr />
+<h5>Code:</h5>*@
+@*<DisplayCode>&lt;ul&gt;<br />    &lt;Dropzone&gt;<br />        &lt;Draggable&gt;<br />            &lt;li class=&quot;list-group-item&quot;&gt;Cras justo odio (order-pos: @@context.OrderPosition)&lt;/li&gt;<br />        &lt;/Draggable&gt;<br />        &lt;Draggable&gt;<br />            &lt;li class=&quot;list-group-item&quot;&gt;Dapibus ac facilisis in (order-pos: @@context.OrderPosition)&lt;/li&gt;<br />        &lt;/Draggable&gt;<br />        &lt;Draggable&gt;<br />            &lt;li class=&quot;list-group-item&quot;&gt;Morbi leo risus (order-pos: @@context.OrderPosition)&lt;/li&gt;<br />        &lt;/Draggable&gt;<br />        &lt;Draggable&gt;<br />            &lt;li class=&quot;list-group-item&quot;&gt;Porta ac consectetur ac (order-pos: @@context.OrderPosition)&lt;/li&gt;<br />        &lt;/Draggable&gt;<br />        &lt;Draggable&gt;<br />            &lt;li class=&quot;list-group-item&quot;&gt;Vestibulum at eros (order-pos: @@context.OrderPosition)&lt;/li&gt;<br />        &lt;/Draggable&gt;<br />    &lt;/Dropzone&gt;<br />&lt;/ul&gt;</DisplayCode>*@

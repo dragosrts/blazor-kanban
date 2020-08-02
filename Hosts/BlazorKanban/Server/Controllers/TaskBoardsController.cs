@@ -34,65 +34,44 @@ namespace BlazorKanban.Server.Controllers
                             {
                                 Id = 1,
                                 BoardId = 1,
-                                Title = "First Board First Column",
-                                Description = "Description of the First Board First Column",
+                                Title = "Column A",
+                                Description = "Description Column A",
                                 Cards = new List<TaskCard>
                                 {
                                     new TaskCard
                                     {
                                         Id = 1,
                                         ColumnId = 1,
-                                        Title = "First Board First Column First Card",
-                                        Description = "Description of the First Board First Column First Card",
+                                        Title = "Task 1A",
+                                        Description = "Description Task 1A",
                                     },
                                     new TaskCard
                                     {
                                         Id = 2,
                                         ColumnId = 1,
-                                        Title = "First Board First Column Second Card",
-                                        Description = "Description of the First Board First Column Second Card",
+                                        Title = "Task 2A",
+                                        Description = "Description Task 2A",
                                     },
                                     new TaskCard
                                     {
                                         Id = 1,
                                         ColumnId = 1,
-                                        Title = "First Board First Column First Card",
-                                        Description = "Description of the First Board First Column First Card",
+                                        Title = "Task 3A",
+                                        Description = "Description Task 3A",
                                     },
                                     new TaskCard
                                     {
                                         Id = 2,
                                         ColumnId = 1,
-                                        Title = "First Board First Column Second Card",
-                                        Description = "Description of the First Board First Column Second Card",
+                                        Title = "Task 4A",
+                                        Description = "Description Task 4A",
                                     },
                                     new TaskCard
                                     {
                                         Id = 1,
                                         ColumnId = 1,
-                                        Title = "First Board First Column First Card",
-                                        Description = "Description of the First Board First Column First Card",
-                                    },
-                                    new TaskCard
-                                    {
-                                        Id = 2,
-                                        ColumnId = 1,
-                                        Title = "First Board First Column Second Card",
-                                        Description = "Description of the First Board First Column Second Card",
-                                    },
-                                    new TaskCard
-                                    {
-                                        Id = 1,
-                                        ColumnId = 1,
-                                        Title = "First Board First Column First Card",
-                                        Description = "Description of the First Board First Column First Card",
-                                    },
-                                    new TaskCard
-                                    {
-                                        Id = 2,
-                                        ColumnId = 1,
-                                        Title = "First Board First Column Second Card",
-                                        Description = "Description of the First Board First Column Second Card",
+                                        Title = "Task 5A",
+                                        Description = "Description Task 5A",
                                     },
                                 }
                             },
@@ -100,16 +79,16 @@ namespace BlazorKanban.Server.Controllers
                             {
                                 Id = 1,
                                 BoardId = 1,
-                                Title = "First Board First Column",
-                                Description = "Description of the First Board First Column",
+                                Title = "Column B",
+                                Description = "Description Column B",
                                 Cards = new List<TaskCard>
                                 {
                                     new TaskCard
                                     {
                                         Id = 1,
                                         ColumnId = 1,
-                                        Title = "First Board First Column First Card",
-                                        Description = "Description of the First Board First Column First Card",
+                                        Title = "Task 1B",
+                                        Description = "Description Task 1B",
                                     }
                                 }
                             },
@@ -117,23 +96,23 @@ namespace BlazorKanban.Server.Controllers
                             {
                                 Id = 1,
                                 BoardId = 1,
-                                Title = "First Board First Column",
-                                Description = "Description of the First Board First Column",
+                                Title = "Column C",
+                                Description = "Description Column C",
                                 Cards = new List<TaskCard>
                                 {
                                     new TaskCard
                                     {
                                         Id = 1,
                                         ColumnId = 1,
-                                        Title = "First Board First Column First Card",
-                                        Description = "Description of the First Board First Column First Card",
+                                        Title = "Task 1C",
+                                        Description = "Description Task 1C",
                                     },
                                     new TaskCard
                                     {
                                         Id = 2,
                                         ColumnId = 1,
-                                        Title = "First Board First Column Second Card",
-                                        Description = "Description of the First Board First Column Second Card",
+                                        Title = "Task 2C",
+                                        Description = "Description Task 2C",
                                     }
                                 }
                             },
@@ -141,8 +120,8 @@ namespace BlazorKanban.Server.Controllers
                             {
                                 Id = 1,
                                 BoardId = 1,
-                                Title = "First Board First Column",
-                                Description = "Description of the First Board First Column",
+                                Title = "Column D",
+                                Description = "Description Column D",
                                 Cards = new List<TaskCard>
                                 {
                                     new TaskCard
@@ -287,162 +266,6 @@ namespace BlazorKanban.Server.Controllers
                             },
                         }
                     },
-                    //new TaskBoard
-                    //{
-                    //    Id = 1,
-                    //    Title = "First Board",
-                    //    Description = "Description of the First Board",
-                    //    Columns = new List<TaskColumn>
-                    //    {
-                    //        new TaskColumn
-                    //        {
-                    //            Id = 1,
-                    //            BoardId = 1,
-                    //            Title = "First Board First Column",
-                    //            Description = "Description of the First Board First Column",
-                    //            Cards = new List<TaskCard>
-                    //            {
-                    //                new TaskCard
-                    //                {
-                    //                    Id = 1,
-                    //                    ColumnId = 1,
-                    //                    Title = "First Board First Column First Card",
-                    //                    Description = "Description of the First Board First Column First Card",
-                    //                }
-                    //            }
-                    //        }
-                    //    }
-                    //},
-                    //new TaskBoard
-                    //{
-                    //    Id = 1,
-                    //    Title = "First Board",
-                    //    Description = "Description of the First Board",
-                    //    Columns = new List<TaskColumn>
-                    //    {
-                    //        new TaskColumn
-                    //        {
-                    //            Id = 1,
-                    //            BoardId = 1,
-                    //            Title = "First Board First Column",
-                    //            Description = "Description of the First Board First Column",
-                    //            Cards = new List<TaskCard>
-                    //            {
-                    //                new TaskCard
-                    //                {
-                    //                    Id = 1,
-                    //                    ColumnId = 1,
-                    //                    Title = "First Board First Column First Card",
-                    //                    Description = "Description of the First Board First Column First Card",
-                    //                }
-                    //            }
-                    //        }
-                    //    },
-                    //},
-                    //new TaskBoard
-                    //{
-                    //    Id = 1,
-                    //    Title = "First Board",
-                    //    Description = "Description of the First Board",
-                    //    Columns = new List<TaskColumn>
-                    //    {
-                    //        new TaskColumn
-                    //        {
-                    //            Id = 1,
-                    //            BoardId = 1,
-                    //            Title = "First Board First Column",
-                    //            Description = "Description of the First Board First Column",
-                    //            Cards = new List<TaskCard>
-                    //            {
-                    //                new TaskCard
-                    //                {
-                    //                    Id = 1,
-                    //                    ColumnId = 1,
-                    //                    Title = "First Board First Column First Card",
-                    //                    Description = "Description of the First Board First Column First Card",
-                    //                }
-                    //            }
-                    //        }
-                    //    },
-                    //},
-                    //new TaskBoard
-                    //{
-                    //    Id = 1,
-                    //    Title = "First Board",
-                    //    Description = "Description of the First Board",
-                    //    Columns = new List<TaskColumn>
-                    //    {
-                    //        new TaskColumn
-                    //        {
-                    //            Id = 1,
-                    //            BoardId = 1,
-                    //            Title = "First Board First Column",
-                    //            Description = "Description of the First Board First Column",
-                    //            Cards = new List<TaskCard>
-                    //            {
-                    //                new TaskCard
-                    //                {
-                    //                    Id = 1,
-                    //                    ColumnId = 1,
-                    //                    Title = "First Board First Column First Card",
-                    //                    Description = "Description of the First Board First Column First Card",
-                    //                }
-                    //            }
-                    //        }
-                    //    },
-                    //},
-                    //new TaskBoard
-                    //{
-                    //    Id = 1,
-                    //    Title = "First Board",
-                    //    Description = "Description of the First Board",
-                    //    Columns = new List<TaskColumn>
-                    //    {
-                    //        new TaskColumn
-                    //        {
-                    //            Id = 1,
-                    //            BoardId = 1,
-                    //            Title = "First Board First Column",
-                    //            Description = "Description of the First Board First Column",
-                    //            Cards = new List<TaskCard>
-                    //            {
-                    //                new TaskCard
-                    //                {
-                    //                    Id = 1,
-                    //                    ColumnId = 1,
-                    //                    Title = "First Board First Column First Card",
-                    //                    Description = "Description of the First Board First Column First Card",
-                    //                }
-                    //            }
-                    //        }
-                    //    },
-                    //},
-                    //new TaskBoard
-                    //{
-                    //    Id = 1,
-                    //    Title = "First Board",
-                    //    Description = "Description of the First Board",
-                    //    Columns = new List<TaskColumn>
-                    //    {
-                    //        new TaskColumn
-                    //        {
-                    //            Id = 1,
-                    //            BoardId = 1,
-                    //            Title = "First Board First Column",
-                    //            Description = "Description of the First Board First Column",
-                    //            Cards = new List<TaskCard>
-                    //            {
-                    //                new TaskCard
-                    //                {
-                    //                    Id = 1,
-                    //                    ColumnId = 1,
-                    //                    Title = "First Board First Column First Card",
-                    //                    Description = "Description of the First Board First Column First Card",
-                    //                }
-                    //            }
-                    //        }
-                    //    },
-                    //},
                 };
 
             return list;

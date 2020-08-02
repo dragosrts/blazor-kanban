@@ -19,6 +19,8 @@ namespace BlazorKanban.Client
                     BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
                 });
 
+            builder.Services.AddBlazorDragDrop();
+
             await builder.Build().RunAsync();
         }
     }

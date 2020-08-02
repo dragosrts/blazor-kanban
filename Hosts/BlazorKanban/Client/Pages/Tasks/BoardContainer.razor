@@ -1,6 +1,6 @@
 ﻿@page "/boards"
 @using BlazorKanban.Shared
-@using BlazorKanban.Client.Pages.Jobs
+@using BlazorKanban.Client.Shared.Components.DragDrop
 
 @inject HttpClient Http
 
@@ -18,42 +18,36 @@ else
     {
         <div class="container-fluid pt-3">
             <div class="row flex-row flex-sm-nowrap py-3">
+
                 @foreach (var column in board.Columns)
                 {
                     <div class="col-sm-6 col-md-4 col-xl-3">
                         <div class="card bg-light">
                             <div class="card-body">
                                 <h6 class="card-title text-uppercase text-truncate py-2">@column.Title</h6>
-                                <div></div>
+
                                 <div class="items border border-light">
-                                    @*<div class="dropzone rounded"
-                                             ondrop="drop(event)"
-                                             ondragover="allowDrop(event)"
-                                             ondragleave="clearDrop(event)">
-                                        </div>*@
 
-                                    @foreach (var card in column.Cards)
-                                    {
-                                        <div class="card draggable shadow-sm" id="@card.Id" draggable="true" ondragstart="drag(event)">
-                                            <div class="card-body p-2">
-                                                <div class="card-title">
-                                                    <img src="//placehold.it/30" class="rounded-circle float-right">
-                                                    <a href="" class="lead font-weight-light">@card.Title</a>
+                                    <Dropzone>
+                                        @foreach (var card in column.Cards)
+                                        {
+                                            <Draggable>
+                                                <div class="card draggable shadow-sm" id="@card.Id">
+                                                    <div class="card-body p-2">
+                                                        <div class="card-title">
+                                                            <img src="//placehold.it/30" class="rounded-circle float-right" />
+                                                            <a href="" class="lead font-weight-light">@card.Title</a>
+                                                        </div>
+                                                        <p>
+                                                            @card.Description
+                                                        </p>
+                                                        <button class="btn btn-primary btn-sm">View</button>
+                                                    </div>
                                                 </div>
-                                                <p>
-                                                    @card.Description
-                                                </p>
-                                                <button class="btn btn-primary btn-sm">View</button>
-                                            </div>
-                                        </div>
-                                        <div class="dropzone rounded"
-                                             ondrop="drop(event)"
-                                             ondragover="allowDrop(event)"
-                                             ondragleave="clearDrop(event)">
-                                        </div>
-                                    }
+                                            </Draggable>
+                                        }
+                                    </Dropzone>
                                     <button class="btn btn-primary btn-sm">Add</button>
-
                                 </div>
                             </div>
                         </div>
@@ -71,46 +65,4 @@ else
     {
         boards = await Http.GetFromJsonAsync<TaskBoard[]>("api/taskboards");
     }
-
-
-    //[CascadingParameter] JobsContainer Container { get; set; }
-    //[Parameter] public JobStatuses ListStatus { get; set; }
-    //[Parameter] public JobStatuses[] AllowedStatuses { get; set; }
-
-    //List<JobDto> Jobs = new List<JobDto>();
-    //string dropClass = "";
-
-    //protected override void OnParametersSet()
-    //{
-    //    Jobs.Clear();
-    //    Jobs.AddRange(Container.Jobs.Where(x => x.Status == ListStatus));
-    //}
-
-    //private void HandleDragEnter()
-    //{
-    //    if (ListStatus == Container.Payload.Status) return;
-
-    //    if (AllowedStatuses != null && !AllowedStatuses.Contains(Container.Payload.Status))
-    //    {
-    //        dropClass = "no-drop";
-    //    }
-    //    else
-    //    {
-    //        dropClass = "can-drop";
-    //    }
-    //}
-
-    //private void HandleDragLeave()
-    //{
-    //    dropClass = "";
-    //}
-
-    //private async Task HandleDrop()
-    //{
-    //    dropClass = "";
-
-    //    if (AllowedStatuses != null && !AllowedStatuses.Contains(Container.Payload.Status)) return;
-
-    //    await Container.UpdateJobAsync(ListStatus);
-    //}
 }
