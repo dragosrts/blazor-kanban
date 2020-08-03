@@ -10,9 +10,9 @@ namespace BlazorKanban.Server.Controllers
     [Route("api/[controller]")]
     public class TaskBoardsController : ControllerBase
     {
-        private readonly ILogger<BoardsController> logger;
+        private readonly ILogger<TaskBoardsController> logger;
 
-        public TaskBoardsController(ILogger<BoardsController> logger)
+        public TaskBoardsController(ILogger<TaskBoardsController> logger)
         {
             this.logger = logger;
         }
@@ -826,6 +826,5 @@ namespace BlazorKanban.Server.Controllers
         {
             return Ok();
         }
-
     }
 }
