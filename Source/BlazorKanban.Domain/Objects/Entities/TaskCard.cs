@@ -1,4 +1,4 @@
-﻿namespace BlazorKanban.Shared
+﻿namespace BlazorKanban.Domain.Objects.Entities
 {
     public class TaskCard
     {

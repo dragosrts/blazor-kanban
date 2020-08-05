@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace BlazorKanban.Shared
+namespace BlazorKanban.Domain.Objects.Entities
 {
-    public class TaskColumn
+    public class TaskList
     {
         public string Id { get; set; }
 

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace BlazorKanban.Shared
+namespace BlazorKanban.Application.TaskBoards.Queries.GetTaskBoardDetail
 {
-    public class TaskColumn
+    public class TaskListDTO
     {
         public string Id { get; set; }
 
@@ -12,6 +12,6 @@ namespace BlazorKanban.Shared
 
         public string Description { get; set; }
 
-        public IEnumerable<TaskCard> Cards { get; set; }
+        public IEnumerable<TaskCardDTO> Cards { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -9,6 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Source\BlazorKanban.Application\BlazorKanban.Application.csproj" />
+    <ProjectReference Include="..\..\..\Source\BlazorKanban.Infrastructure\BlazorKanban.Infrastructure.csproj" />
     <ProjectReference Include="..\Client\BlazorKanban.Client.csproj" />
     <ProjectReference Include="..\Shared\BlazorKanban.Shared.csproj" />
   </ItemGroup>

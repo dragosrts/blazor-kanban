@@ -2,6 +2,25 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="TaskBoards\Commands\" />
+    <Folder Include="TaskCards\Commands\" />
+    <Folder Include="TaskCards\Queries\" />
+    <Folder Include="Common\" />
+    <Folder Include="TaskLists\Commands\" />
+    <Folder Include="TaskLists\Queries\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="8.1.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BlazorKanban.Domain\BlazorKanban.Domain.csproj" />
+  </ItemGroup>
 
 </Project>

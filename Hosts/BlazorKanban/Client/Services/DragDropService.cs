@@ -18,7 +18,7 @@ namespace BlazorKanban.Client.Services
         private int _idDropzoneCounter = 1;
         private int _idDraggableCounter = 1;
 
-        private DraggableProperty _activeItem;
+        private DraggableProperty? _activeItem;
 
         internal DraggableProperty _lastDraggedOverItem;
 
@@ -52,7 +52,7 @@ namespace BlazorKanban.Client.Services
 
         public bool EnableDebug { get; set; }
 
-        public DraggableProperty ActiveItem
+        public DraggableProperty? ActiveItem
         {
             get => _activeItem;
             set

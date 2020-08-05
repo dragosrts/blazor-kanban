@@ -1,6 +1,6 @@
-﻿namespace BlazorKanban.Shared
+﻿namespace BlazorKanban.Application.TaskBoards.Queries.GetTaskBoardDetail
 {
-    public class TaskCard
+    public class TaskCardDTO
     {
         public string Id { get; set; }
 
