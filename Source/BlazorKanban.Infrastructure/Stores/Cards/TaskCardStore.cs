@@ -1,48 +1,64 @@
-﻿using BlazorKanban.Domain.Contracts.TaskCards;
+﻿using AutoMapper;
+using BlazorKanban.Domain.Contracts.TaskCards;
 using BlazorKanban.Domain.Objects.Entities;
 using BlazorKanban.Infrastructure.Common;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace BlazorKanban.Infrastructure.Stores.Cards
 {
-    public class TaskCardStore<TCard> : ICreateTaskCardEntity<TCard>, IUpdateTaskCardEntity<TCard>, IDeleteTaskCardEntity<TCard>, IFindTaskCardEntity<TCard>
+    public class TaskCardStore<TCard, TMongoCollection> :
+        ICreateTaskCardEntity<TCard>,
+        IUpdateTaskCardEntity<TCard>,
+        IDeleteTaskCardEntity<TCard>,
+        IGetTaskCardEntity<TCard>
         where TCard : TaskCard
+        where TMongoCollection : MongoTaskCard
     {
-        private readonly IMongoCollection<TCard> _cardsCollection;
+        private readonly IMongoCollection<TMongoCollection> _cardsCollection;
+        private readonly IMapper mapper;
 
-        public TaskCardStore(IMongoCollection<TCard> cardsCollection)
+        public TaskCardStore(IMongoCollection<TMongoCollection> cardsCollection, IMapper mapper)
         {
             _cardsCollection = cardsCollection ?? throw new ArgumentNullException(nameof(cardsCollection));
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<string> CreateAsync(TCard card, CancellationToken cancellationToken)
         {
             if (card == null) throw new ArgumentNullException(nameof(card));
+            
+            var mongoCard = mapper.Map<TCard, TMongoCollection>(card);
 
-            var found = await _cardsCollection.FirstOrDefaultAsync(x => x.Id == card.Id, cancellationToken).ConfigureAwait(false);
+            var foundCard = await _cardsCollection.FirstOrDefaultAsync(x => x.Id == mongoCard.Id, cancellationToken).ConfigureAwait(false);
 
-            if (found == null) await _cardsCollection.InsertOneAsync(card, cancellationToken: cancellationToken).ConfigureAwait(false);
+            if (foundCard == null) await _cardsCollection.InsertOneAsync(mongoCard, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-            return card.Id;
+            return mongoCard.Id.ToString();
         }
 
         public async Task<string> UpdateAsync(TCard card, CancellationToken cancellationToken)
         {
             if (card == null) throw new ArgumentNullException(nameof(card));
 
-            var x = await _cardsCollection.ReplaceOneAsync(x => x.Id == card.Id, card, cancellationToken: cancellationToken).ConfigureAwait(false);
+            var mongoCard = mapper.Map<TCard, TMongoCollection>(card);
 
-            return card.Id;
+            await _cardsCollection.ReplaceOneAsync(x => x.Id == mongoCard.Id, mongoCard, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+            return mongoCard.Id.ToString();
         }
 
         public async Task<bool> DeleteAsync(TCard card, CancellationToken cancellationToken)
         {
             if (card == null) throw new ArgumentNullException(nameof(card));
 
-            var result = await _cardsCollection.DeleteOneAsync(x => x.Id == card.Id, cancellationToken).ConfigureAwait(false);
+            var mongoCard = mapper.Map<TCard, TMongoCollection>(card);
+
+            var result = await _cardsCollection.DeleteOneAsync(x => x.Id == mongoCard.Id, cancellationToken).ConfigureAwait(false);
 
             if (result.DeletedCount > 0)
             {
@@ -52,9 +68,26 @@ namespace BlazorKanban.Infrastructure.Stores.Cards
             return false;
         }
 
-        public Task<TCard> FindByIdAsync(string Id, CancellationToken cancellationToken)
+        public async Task<TCard> GetByIdAsync(string Id, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(Id)) throw new ArgumentNullException(nameof(Id));
+
+            var mongoCard = await _cardsCollection.FirstOrDefaultAsync(x => x.Id == ObjectId.Parse(Id), cancellationToken: cancellationToken).ConfigureAwait(true);
+
+            var domainCard = mapper.Map<TMongoCollection, TCard>(mongoCard);
+
+            return domainCard;
+        }
+
+        public async Task<IEnumerable<TCard>> GetAllByTaskListIdAsync(string ListId, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrEmpty(ListId)) throw new ArgumentNullException(nameof(ListId));
+
+            var mongoCards = await _cardsCollection.WhereAsync(x => x.ListId == ObjectId.Parse(ListId), cancellationToken: cancellationToken).ConfigureAwait(true);
+
+            var domainCards = mapper.Map<IEnumerable<TMongoCollection>, IEnumerable<TCard>>(mongoCards);
+
+            return domainCards;
         }
     }
 }

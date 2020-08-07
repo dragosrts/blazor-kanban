@@ -8,15 +8,15 @@
 
 @code {
     [Parameter]
-    public List<TaskCard> Cards { get; set; }
+    public List<Card> Cards { get; set; }
 
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
     [Parameter]
-    public EventCallback<TaskColumn> OnStatusUpdated { get; set; }
+    public EventCallback<Column> OnStatusUpdated { get; set; }
 
-    public TaskCard Payload { get; set; }
+    public Card Payload { get; set; }
 
     //public async Task UpdateJobAsync(JobStatuses newStatus)
     //{

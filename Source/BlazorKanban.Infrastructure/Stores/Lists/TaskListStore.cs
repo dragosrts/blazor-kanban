@@ -1,48 +1,64 @@
-﻿using BlazorKanban.Domain.Contracts.TaskLists;
+﻿using AutoMapper;
+using BlazorKanban.Domain.Contracts.TaskLists;
 using BlazorKanban.Domain.Objects.Entities;
 using BlazorKanban.Infrastructure.Common;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace BlazorKanban.Infrastructure.Stores.Lists
 {
-    public class TaskListStore<TList> : ICreateTaskListEntity<TList>, IUpdateTaskListEntity<TList>, IDeleteTaskListEntity<TList>
+    public class TaskListStore<TList, TMongoCollection> :
+        ICreateTaskListEntity<TList>,
+        IUpdateTaskListEntity<TList>,
+        IDeleteTaskListEntity<TList>,
+        IGetTaskListEntity<TList>
         where TList : TaskList
+        where TMongoCollection : MongoTaskList
     {
-        private readonly IMongoCollection<TList> _listsCollection;
+        private readonly IMongoCollection<TMongoCollection> _listsCollection;
+        private readonly IMapper mapper;
 
-        public TaskListStore(IMongoCollection<TList> listsCollection)
+        public TaskListStore(IMongoCollection<TMongoCollection> listsCollection, IMapper mapper)
         {
             _listsCollection = listsCollection ?? throw new ArgumentNullException(nameof(listsCollection));
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<string> CreateAsync(TList list, CancellationToken cancellationToken)
         {
             if (list == null) throw new ArgumentNullException(nameof(list));
 
-            var found = await _listsCollection.FirstOrDefaultAsync(x => x.Id == list.Id, cancellationToken).ConfigureAwait(false);
+            var mongoList = mapper.Map<TList, TMongoCollection>(list);
 
-            if (found == null) await _listsCollection.InsertOneAsync(list, cancellationToken: cancellationToken).ConfigureAwait(false);
+            var foundList = await _listsCollection.FirstOrDefaultAsync(x => x.Id == mongoList.Id, cancellationToken).ConfigureAwait(false);
 
-            return list.Id;
+            if (foundList == null) await _listsCollection.InsertOneAsync(mongoList, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+            return mongoList.Id.ToString();
         }
 
         public async Task<string> UpdateAsync(TList list, CancellationToken cancellationToken)
         {
             if (list == null) throw new ArgumentNullException(nameof(list));
 
-            var x = await _listsCollection.ReplaceOneAsync(x => x.Id == list.Id, list, cancellationToken: cancellationToken).ConfigureAwait(false);
+            var mongoList = mapper.Map<TList, TMongoCollection>(list);
 
-            return list.Id;
+            await _listsCollection.ReplaceOneAsync(x => x.Id == mongoList.Id, mongoList, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+            return mongoList.Id.ToString();
         }
 
         public async Task<bool> DeleteAsync(TList list, CancellationToken cancellationToken)
         {
             if (list == null) throw new ArgumentNullException(nameof(list));
 
-            var result = await _listsCollection.DeleteOneAsync(x => x.Id == list.Id, cancellationToken).ConfigureAwait(false);
+            var mongoList = mapper.Map<TList, TMongoCollection>(list);
+
+            var result = await _listsCollection.DeleteOneAsync(x => x.Id == mongoList.Id, cancellationToken).ConfigureAwait(false);
 
             if (result.DeletedCount > 0)
             {
@@ -50,6 +66,28 @@ namespace BlazorKanban.Infrastructure.Stores.Lists
             }
 
             return false;
+        }
+
+        public async Task<TList> GetByIdAsync(string Id, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrEmpty(Id)) throw new ArgumentNullException(nameof(Id));
+
+            var mongoList = await _listsCollection.FirstOrDefaultAsync(x => x.Id == ObjectId.Parse(Id), cancellationToken: cancellationToken).ConfigureAwait(true);
+
+            var domainList = mapper.Map<TMongoCollection, TList>(mongoList);
+
+            return domainList;
+        }
+
+        public async Task<IEnumerable<TList>> GetAllByTaskBoardIdAsync(string BoardId, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrEmpty(BoardId)) throw new ArgumentNullException(nameof(BoardId));
+
+            var mongoLists = await _listsCollection.WhereAsync(x => x.BoardId == ObjectId.Parse(BoardId), cancellationToken: cancellationToken).ConfigureAwait(true);
+
+            var domainLists = mapper.Map<IEnumerable<TMongoCollection>, IEnumerable<TList>>(mongoLists);
+
+            return domainLists;
         }
     }
 }

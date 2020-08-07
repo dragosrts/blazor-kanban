@@ -1,6 +1,6 @@
 ﻿namespace BlazorKanban.Domain.Contracts.Common
 {
-    public interface IBaseFindEntity
+    public interface IBaseGetEntity
     {
     }
 }

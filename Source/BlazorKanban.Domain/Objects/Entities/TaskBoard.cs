@@ -10,6 +10,6 @@ namespace BlazorKanban.Domain.Objects.Entities
 
         public string Description { get; set; }
 
-        public IEnumerable<TaskList> Columns { get; set; }
+        public IEnumerable<TaskList> Lists { get; set; }
     }
 }

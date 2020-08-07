@@ -2,7 +2,7 @@
 
 namespace BlazorKanban.Domain.Contracts.TaskBoards
 {
-    public interface IFindTaskBoardEntity<TBoard> : IFindEntity<TBoard>
+    public interface IGetTaskBoardEntity<TBoard> : IGetEntity<TBoard>
     {
     }
 }

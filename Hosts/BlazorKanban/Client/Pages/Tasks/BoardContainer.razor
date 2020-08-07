@@ -8,14 +8,14 @@
 
 <p>This component demonstrates fetching data from the server.</p>
 
-@if (boards == null)
+@if (board == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    @foreach (var board in boards)
-    {
+    @*@foreach (var board in board)
+    {*@
         <div class="container-fluid pt-3">
             <div class="row flex-row flex-sm-nowrap py-3">
 
@@ -55,14 +55,14 @@ else
                 }
             </div>
         </div>
-    }
+    @*}*@
 }
 
 @code {
-    private TaskBoard[] boards;
+    private Board board;
 
     protected override async Task OnInitializedAsync()
     {
-        boards = await Http.GetFromJsonAsync<TaskBoard[]>("api/taskboards");
+        board = await Http.GetFromJsonAsync<Board>("api/taskboards/5f2c15d77a65952d71665819");
     }
 }

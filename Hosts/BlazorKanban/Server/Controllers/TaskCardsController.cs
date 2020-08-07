@@ -17,7 +17,7 @@ namespace BlazorKanban.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> CreateTaskCard(TaskCard card)
+        public async Task<ActionResult<int>> CreateTaskCard(Card card)
         {
             return 2;
         }

@@ -14,15 +14,14 @@
 </div>
 <div class="dropzone rounded" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="clearDrop(event)"> &nbsp; </div>
 
-
 @code {
     [CascadingParameter]
     ColumnContainer Container { get; set; }
 
     [Parameter]
-    public TaskCard Card { get; set; }
+    public Card Card { get; set; }
 
-    private void HandleDragStart(TaskCard selectedCard)
+    private void HandleDragStart(Card selectedCard)
     {
         Container.Payload = selectedCard;
     }

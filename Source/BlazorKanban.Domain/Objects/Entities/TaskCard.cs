@@ -4,7 +4,7 @@
     {
         public string Id { get; set; }
 
-        public string ColumnId { get; set; }
+        public string ListId { get; set; }
 
         public string Title { get; set; }
 

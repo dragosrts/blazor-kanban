@@ -17,7 +17,7 @@ namespace BlazorKanban.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> CreateTaskList(TaskColumn column)
+        public async Task<ActionResult<int>> CreateTaskList(Column column)
         {
             return 2;
         }
