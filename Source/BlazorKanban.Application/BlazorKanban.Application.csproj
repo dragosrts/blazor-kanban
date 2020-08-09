@@ -6,11 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="TaskBoards\Commands\" />
-    <Folder Include="TaskCards\Commands\" />
     <Folder Include="TaskCards\Queries\" />
     <Folder Include="Common\" />
-    <Folder Include="TaskLists\Commands\" />
     <Folder Include="TaskLists\Queries\" />
   </ItemGroup>
 

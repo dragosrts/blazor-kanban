@@ -5,6 +5,12 @@ namespace BlazorKanban.Infrastructure.Stores.Cards
 {
     public class MongoTaskCard : MongoStoreBaseEntity
     {
+        public MongoTaskCard()
+        {
+            Title = string.Empty;
+            Description = string.Empty;
+        }
+
         // reference to MongoList
         public ObjectId ListId { get; set; }
 

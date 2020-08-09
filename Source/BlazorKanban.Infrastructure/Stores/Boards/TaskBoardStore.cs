@@ -18,13 +18,18 @@ namespace BlazorKanban.Infrastructure.Stores.Boards
         where TBoard : TaskBoard
         where TMongoCollection : MongoTaskBoard
     {
-        private readonly IMongoCollection<TMongoCollection> boardsCollection;
+        private readonly IMongoCollection<TMongoCollection> _boardsCollection;
         private readonly IMapper mapper;
 
         public TaskBoardStore(IMongoCollection<TMongoCollection> boardsCollection, IMapper mapper)
         {
-            this.boardsCollection = boardsCollection ?? throw new ArgumentNullException(nameof(boardsCollection));
+            _boardsCollection = boardsCollection ?? throw new ArgumentNullException(nameof(boardsCollection));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        }
+
+        public string GenerateIdentifier()
+        {
+            return ObjectId.GenerateNewId().ToString();
         }
 
         public async Task<string> CreateAsync(TBoard board, CancellationToken cancellationToken)
@@ -33,9 +38,9 @@ namespace BlazorKanban.Infrastructure.Stores.Boards
 
             var mongoBoard = mapper.Map<TBoard, TMongoCollection>(board);
 
-            var foundBoard = await boardsCollection.FirstOrDefaultAsync(x => x.Id == mongoBoard.Id, cancellationToken).ConfigureAwait(false);
+            var foundBoard = await _boardsCollection.FirstOrDefaultAsync(x => x.Title == mongoBoard.Title, cancellationToken).ConfigureAwait(false);
 
-            if (foundBoard == null) await boardsCollection.InsertOneAsync(mongoBoard, cancellationToken: cancellationToken).ConfigureAwait(false);
+            if (foundBoard == null) await _boardsCollection.InsertOneAsync(mongoBoard, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             return mongoBoard.Id.ToString();
         }
@@ -46,18 +51,23 @@ namespace BlazorKanban.Infrastructure.Stores.Boards
 
             var mongoBoard = mapper.Map<TBoard, TMongoCollection>(board);
 
-            await boardsCollection.ReplaceOneAsync(x => x.Id == mongoBoard.Id, mongoBoard, cancellationToken: cancellationToken).ConfigureAwait(false);
+            var updateDefinition =
+                Builders<TMongoCollection>.Update
+                .Set(b => b.Title, mongoBoard.Title)
+                .Set(b => b.Description, mongoBoard.Description);
+
+            await _boardsCollection.UpdateOneAsync(x => x.Id == mongoBoard.Id, updateDefinition, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             return mongoBoard.Id.ToString();
         }
 
-        public async Task<bool> DeleteAsync(TBoard board, CancellationToken cancellationToken)
+        public async Task<bool> DeleteAsync(string Id, CancellationToken cancellationToken)
         {
-            if (board == null) throw new ArgumentNullException(nameof(board));
+            if (Id == null) throw new ArgumentNullException(nameof(Id));
 
-            var mongoBoard = mapper.Map<TBoard, TMongoCollection>(board);
+            var mongoBoardId = ObjectId.Parse(Id);
 
-            var result = await boardsCollection.DeleteOneAsync(x => x.Id == mongoBoard.Id, cancellationToken).ConfigureAwait(false);
+            var result = await _boardsCollection.DeleteOneAsync(x => x.Id == mongoBoardId, cancellationToken).ConfigureAwait(false);
 
             if (result.DeletedCount > 0)
             {
@@ -71,7 +81,7 @@ namespace BlazorKanban.Infrastructure.Stores.Boards
         {
             if (string.IsNullOrEmpty(Id)) throw new ArgumentNullException(nameof(Id));
 
-            var mongoBoard = await boardsCollection.FirstOrDefaultAsync(x => x.Id == ObjectId.Parse(Id), cancellationToken: cancellationToken).ConfigureAwait(true);
+            var mongoBoard = await _boardsCollection.FirstOrDefaultAsync(x => x.Id == ObjectId.Parse(Id), cancellationToken: cancellationToken).ConfigureAwait(true);
 
             var domainBoard = mapper.Map<TMongoCollection, TBoard>(mongoBoard);
 

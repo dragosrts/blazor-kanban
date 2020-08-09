@@ -5,6 +5,6 @@ namespace BlazorKanban.Domain.Contracts.Common
 {
     public interface IDeleteEntity<T> : IBaseDeleteEntity
     {
-        public Task<bool> DeleteAsync(T entity, CancellationToken cancellationToken);
+        Task<bool> DeleteAsync(string entityId, CancellationToken cancellationToken);
     }
 }

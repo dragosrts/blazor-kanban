@@ -4,12 +4,28 @@ namespace BlazorKanban.Domain.Objects.Entities
 {
     public class TaskBoard
     {
-        public string Id { get; set; }
+        public TaskBoard()
+        {
+            Id = string.Empty;
+            Title = string.Empty;
+            Description = string.Empty;
+            Lists = new List<TaskList>();
+        }
 
-        public string Title { get; set; }
+        public TaskBoard(string id, string title, string description, IEnumerable<TaskList> lists)
+        {
+            Id = id;
+            Title = title;
+            Description = description;
+            Lists = lists;
+        }
 
-        public string Description { get; set; }
+        public string Id { get; private set; }
 
-        public IEnumerable<TaskList> Lists { get; set; }
+        public string Title { get; private set; }
+
+        public string Description { get; private set; }
+
+        public IEnumerable<TaskList> Lists { get; private set; }
     }
 }

@@ -1,5 +1,9 @@
 ﻿using AutoMapper;
-using BlazorKanban.Application.TaskBoards.Queries.GetTaskBoardDetail;
+using BlazorKanban.Application.TaskBoards.Commands.CreateTaskBoard;
+using BlazorKanban.Application.TaskBoards.Commands.DeleteTaskBoard;
+using BlazorKanban.Application.TaskBoards.Commands.UpdateTaskBoard;
+using BlazorKanban.Application.TaskBoards.Queries.GetTaskBoard;
+using BlazorKanban.Domain.Objects.Entities;
 using BlazorKanban.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -30,251 +34,6 @@ namespace BlazorKanban.Server.Controllers
         {
             var list =
                 new List<Board>();
-            //{
-            //    new TaskBoard
-            //    {
-            //        Id = 1,
-            //        Title = "First Board",
-            //        Description = "Description of the First Board",
-            //        Columns = new List<TaskColumn>
-            //        {
-            //            new TaskColumn
-            //            {
-            //                Id = 1,
-            //                BoardId = 1,
-            //                Title = "Column A",
-            //                Description = "Description Column A",
-            //                Cards = new List<TaskCard>
-            //                {
-            //                    new TaskCard
-            //                    {
-            //                        Id = 1,
-            //                        ColumnId = 1,
-            //                        Title = "Task 1A",
-            //                        Description = "Description Task 1A",
-            //                    },
-            //                    new TaskCard
-            //                    {
-            //                        Id = 2,
-            //                        ColumnId = 1,
-            //                        Title = "Task 2A",
-            //                        Description = "Description Task 2A",
-            //                    },
-            //                    new TaskCard
-            //                    {
-            //                        Id = 1,
-            //                        ColumnId = 1,
-            //                        Title = "Task 3A",
-            //                        Description = "Description Task 3A",
-            //                    },
-            //                    new TaskCard
-            //                    {
-            //                        Id = 2,
-            //                        ColumnId = 1,
-            //                        Title = "Task 4A",
-            //                        Description = "Description Task 4A",
-            //                    },
-            //                    new TaskCard
-            //                    {
-            //                        Id = 1,
-            //                        ColumnId = 1,
-            //                        Title = "Task 5A",
-            //                        Description = "Description Task 5A",
-            //                    },
-            //                }
-            //            },
-            //            new TaskColumn
-            //            {
-            //                Id = 1,
-            //                BoardId = 1,
-            //                Title = "Column B",
-            //                Description = "Description Column B",
-            //                Cards = new List<TaskCard>
-            //                {
-            //                    new TaskCard
-            //                    {
-            //                        Id = 1,
-            //                        ColumnId = 1,
-            //                        Title = "Task 1B",
-            //                        Description = "Description Task 1B",
-            //                    }
-            //                }
-            //            },
-            //            new TaskColumn
-            //            {
-            //                Id = 1,
-            //                BoardId = 1,
-            //                Title = "Column C",
-            //                Description = "Description Column C",
-            //                Cards = new List<TaskCard>
-            //                {
-            //                    new TaskCard
-            //                    {
-            //                        Id = 1,
-            //                        ColumnId = 1,
-            //                        Title = "Task 1C",
-            //                        Description = "Description Task 1C",
-            //                    },
-            //                    new TaskCard
-            //                    {
-            //                        Id = 2,
-            //                        ColumnId = 1,
-            //                        Title = "Task 2C",
-            //                        Description = "Description Task 2C",
-            //                    }
-            //                }
-            //            },
-            //            new TaskColumn
-            //            {
-            //                Id = 1,
-            //                BoardId = 1,
-            //                Title = "Column D",
-            //                Description = "Description Column D",
-            //                Cards = new List<TaskCard>
-            //                {
-            //                    new TaskCard
-            //                    {
-            //                        Id = 1,
-            //                        ColumnId = 1,
-            //                        Title = "First Board First Column First Card",
-            //                        Description = "Description of the First Board First Column First Card",
-            //                    },
-            //                    new TaskCard
-            //                    {
-            //                        Id = 1,
-            //                        ColumnId = 1,
-            //                        Title = "First Board First Column First Card",
-            //                        Description = "Description of the First Board First Column First Card",
-            //                    },
-            //                    new TaskCard
-            //                    {
-            //                        Id = 2,
-            //                        ColumnId = 1,
-            //                        Title = "First Board First Column Second Card",
-            //                        Description = "Description of the First Board First Column Second Card",
-            //                    },
-            //                    new TaskCard
-            //                    {
-            //                        Id = 1,
-            //                        ColumnId = 1,
-            //                        Title = "First Board First Column First Card",
-            //                        Description = "Description of the First Board First Column First Card",
-            //                    },
-            //                    new TaskCard
-            //                    {
-            //                        Id = 2,
-            //                        ColumnId = 1,
-            //                        Title = "First Board First Column Second Card",
-            //                        Description = "Description of the First Board First Column Second Card",
-            //                    },
-            //                    new TaskCard
-            //                    {
-            //                        Id = 1,
-            //                        ColumnId = 1,
-            //                        Title = "First Board First Column First Card",
-            //                        Description = "Description of the First Board First Column First Card",
-            //                    },
-            //                    new TaskCard
-            //                    {
-            //                        Id = 2,
-            //                        ColumnId = 1,
-            //                        Title = "First Board First Column Second Card",
-            //                        Description = "Description of the First Board First Column Second Card",
-            //                    },
-            //                    new TaskCard
-            //                    {
-            //                        Id = 1,
-            //                        ColumnId = 1,
-            //                        Title = "First Board First Column First Card",
-            //                        Description = "Description of the First Board First Column First Card",
-            //                    },
-            //                    new TaskCard
-            //                    {
-            //                        Id = 2,
-            //                        ColumnId = 1,
-            //                        Title = "First Board First Column Second Card",
-            //                        Description = "Description of the First Board First Column Second Card",
-            //                    },
-            //                }
-            //            },
-            //            new TaskColumn
-            //            {
-            //                Id = 1,
-            //                BoardId = 1,
-            //                Title = "First Board First Column",
-            //                Description = "Description of the First Board First Column",
-            //                Cards = new List<TaskCard>
-            //                {
-            //                    new TaskCard
-            //                    {
-            //                        Id = 1,
-            //                        ColumnId = 1,
-            //                        Title = "First Board First Column First Card",
-            //                        Description = "Description of the First Board First Column First Card",
-            //                    },
-            //                    new TaskCard
-            //                    {
-            //                        Id = 2,
-            //                        ColumnId = 1,
-            //                        Title = "First Board First Column Second Card",
-            //                        Description = "Description of the First Board First Column Second Card",
-            //                    },
-            //                }
-            //            },
-            //            new TaskColumn
-            //            {
-            //                Id = 1,
-            //                BoardId = 1,
-            //                Title = "First Board First Column",
-            //                Description = "Description of the First Board First Column",
-            //                Cards = new List<TaskCard>
-            //                {
-            //                    new TaskCard
-            //                    {
-            //                        Id = 1,
-            //                        ColumnId = 1,
-            //                        Title = "First Board First Column First Card",
-            //                        Description = "Description of the First Board First Column First Card",
-            //                    },
-            //                }
-            //            },
-            //            new TaskColumn
-            //            {
-            //                Id = 1,
-            //                BoardId = 1,
-            //                Title = "First Board First Column",
-            //                Description = "Description of the First Board First Column",
-            //                Cards = new List<TaskCard>
-            //                {
-            //                    new TaskCard
-            //                    {
-            //                        Id = 1,
-            //                        ColumnId = 1,
-            //                        Title = "First Board First Column First Card",
-            //                        Description = "Description of the First Board First Column First Card",
-            //                    },
-            //                }
-            //            },
-            //            new TaskColumn
-            //            {
-            //                Id = 1,
-            //                BoardId = 1,
-            //                Title = "First Board First Column",
-            //                Description = "Description of the First Board First Column",
-            //                Cards = new List<TaskCard>
-            //                {
-            //                    new TaskCard
-            //                    {
-            //                        Id = 1,
-            //                        ColumnId = 1,
-            //                        Title = "First Board First Column First Card",
-            //                        Description = "Description of the First Board First Column First Card",
-            //                    },
-            //                }
-            //            },
-            //        }
-            //    },
-            //};
 
             return list;
         }
@@ -282,7 +41,7 @@ namespace BlazorKanban.Server.Controllers
         [HttpGet("{id}")]
         public async Task<Board> GetTaskBoard(string id)
         {
-            var vm = await mediator.Send(new GetTaskBoardDetailQuery() { Id = id });
+            var vm = await mediator.Send(new GetTaskBoardDetailQuery(id: id));
 
             var result = mapper.Map<Board>(vm);
 
@@ -290,287 +49,39 @@ namespace BlazorKanban.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<Board> CreateTaskBoard(Board board)
+        public async Task<string> CreateTaskBoard(Board board)
         {
-            var list = new Board();
-            //    new TaskBoard
-            //    {
-            //        Id = 1,
-            //        Title = "First Board",
-            //        Description = "Description of the First Board",
-            //        Columns = new List<TaskColumn>
-            //{
-            //                new TaskColumn
-            //                {
-            //                    Id = 1,
-            //                    BoardId = 1,
-            //                    Title = "First Board First Column",
-            //                    Description = "Description of the First Board First Column",
-            //                    Cards = new List<TaskCard>
-            //                    {
-            //                        new TaskCard
-            //                        {
-            //                            Id = 1,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column First Card",
-            //                            Description = "Description of the First Board First Column First Card",
-            //                        },
-            //                        new TaskCard
-            //                        {
-            //                            Id = 2,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column Second Card",
-            //                            Description = "Description of the First Board First Column Second Card",
-            //                        },
-            //                        new TaskCard
-            //                        {
-            //                            Id = 1,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column First Card",
-            //                            Description = "Description of the First Board First Column First Card",
-            //                        },
-            //                        new TaskCard
-            //                        {
-            //                            Id = 2,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column Second Card",
-            //                            Description = "Description of the First Board First Column Second Card",
-            //                        },
-            //                        new TaskCard
-            //                        {
-            //                            Id = 1,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column First Card",
-            //                            Description = "Description of the First Board First Column First Card",
-            //                        },
-            //                        new TaskCard
-            //                        {
-            //                            Id = 2,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column Second Card",
-            //                            Description = "Description of the First Board First Column Second Card",
-            //                        },
-            //                        new TaskCard
-            //                        {
-            //                            Id = 1,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column First Card",
-            //                            Description = "Description of the First Board First Column First Card",
-            //                        },
-            //                        new TaskCard
-            //                        {
-            //                            Id = 2,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column Second Card",
-            //                            Description = "Description of the First Board First Column Second Card",
-            //                        },
-            //                    }
-            //                },
-            //                new TaskColumn
-            //                {
-            //                    Id = 1,
-            //                    BoardId = 1,
-            //                    Title = "First Board First Column",
-            //                    Description = "Description of the First Board First Column",
-            //                    Cards = new List<TaskCard>
-            //                    {
-            //                        new TaskCard
-            //                        {
-            //                            Id = 1,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column First Card",
-            //                            Description = "Description of the First Board First Column First Card",
-            //                        }
-            //                    }
-            //                },
-            //                new TaskColumn
-            //                {
-            //                    Id = 1,
-            //                    BoardId = 1,
-            //                    Title = "First Board First Column",
-            //                    Description = "Description of the First Board First Column",
-            //                    Cards = new List<TaskCard>
-            //                    {
-            //                        new TaskCard
-            //                        {
-            //                            Id = 1,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column First Card",
-            //                            Description = "Description of the First Board First Column First Card",
-            //                        },
-            //                        new TaskCard
-            //                        {
-            //                            Id = 2,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column Second Card",
-            //                            Description = "Description of the First Board First Column Second Card",
-            //                        }
-            //                    }
-            //                },
-            //                new TaskColumn
-            //                {
-            //                    Id = 1,
-            //                    BoardId = 1,
-            //                    Title = "First Board First Column",
-            //                    Description = "Description of the First Board First Column",
-            //                    Cards = new List<TaskCard>
-            //                    {
-            //                        new TaskCard
-            //                        {
-            //                            Id = 1,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column First Card",
-            //                            Description = "Description of the First Board First Column First Card",
-            //                        },
-            //                        new TaskCard
-            //                        {
-            //                            Id = 1,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column First Card",
-            //                            Description = "Description of the First Board First Column First Card",
-            //                        },
-            //                        new TaskCard
-            //                        {
-            //                            Id = 2,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column Second Card",
-            //                            Description = "Description of the First Board First Column Second Card",
-            //                        },
-            //                        new TaskCard
-            //                        {
-            //                            Id = 1,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column First Card",
-            //                            Description = "Description of the First Board First Column First Card",
-            //                        },
-            //                        new TaskCard
-            //                        {
-            //                            Id = 2,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column Second Card",
-            //                            Description = "Description of the First Board First Column Second Card",
-            //                        },
-            //                        new TaskCard
-            //                        {
-            //                            Id = 1,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column First Card",
-            //                            Description = "Description of the First Board First Column First Card",
-            //                        },
-            //                        new TaskCard
-            //                        {
-            //                            Id = 2,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column Second Card",
-            //                            Description = "Description of the First Board First Column Second Card",
-            //                        },
-            //                        new TaskCard
-            //                        {
-            //                            Id = 1,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column First Card",
-            //                            Description = "Description of the First Board First Column First Card",
-            //                        },
-            //                        new TaskCard
-            //                        {
-            //                            Id = 2,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column Second Card",
-            //                            Description = "Description of the First Board First Column Second Card",
-            //                        },
-            //                    }
-            //                },
-            //                new TaskColumn
-            //                {
-            //                    Id = 1,
-            //                    BoardId = 1,
-            //                    Title = "First Board First Column",
-            //                    Description = "Description of the First Board First Column",
-            //                    Cards = new List<TaskCard>
-            //                    {
-            //                        new TaskCard
-            //                        {
-            //                            Id = 1,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column First Card",
-            //                            Description = "Description of the First Board First Column First Card",
-            //                        },
-            //                        new TaskCard
-            //                        {
-            //                            Id = 2,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column Second Card",
-            //                            Description = "Description of the First Board First Column Second Card",
-            //                        },
-            //                    }
-            //                },
-            //                new TaskColumn
-            //                {
-            //                    Id = 1,
-            //                    BoardId = 1,
-            //                    Title = "First Board First Column",
-            //                    Description = "Description of the First Board First Column",
-            //                    Cards = new List<TaskCard>
-            //                    {
-            //                        new TaskCard
-            //                        {
-            //                            Id = 1,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column First Card",
-            //                            Description = "Description of the First Board First Column First Card",
-            //                        },
-            //                    }
-            //                },
-            //                new TaskColumn
-            //                {
-            //                    Id = 1,
-            //                    BoardId = 1,
-            //                    Title = "First Board First Column",
-            //                    Description = "Description of the First Board First Column",
-            //                    Cards = new List<TaskCard>
-            //                    {
-            //                        new TaskCard
-            //                        {
-            //                            Id = 1,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column First Card",
-            //                            Description = "Description of the First Board First Column First Card",
-            //                        },
-            //                    }
-            //                },
-            //                new TaskColumn
-            //                {
-            //                    Id = 1,
-            //                    BoardId = 1,
-            //                    Title = "First Board First Column",
-            //                    Description = "Description of the First Board First Column",
-            //                    Cards = new List<TaskCard>
-            //                    {
-            //                        new TaskCard
-            //                        {
-            //                            Id = 1,
-            //                            ColumnId = 1,
-            //                            Title = "First Board First Column First Card",
-            //                            Description = "Description of the First Board First Column First Card",
-            //                        },
-            //                    }
-            //                },
-            //}
-            //    };
+            var result = await mediator.Send(
+                new CreateTaskBoardCommand(
+                    title: board.Title,
+                    description: board.Description
+                ));
 
-            return list;
+            return result;
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<ActionResult<int>> UpdateTaskBoard(int id)
+        [HttpPut("{id}")]
+        public async Task<ActionResult<string>> UpdateTaskBoard(Board board)
         {
-            return 2;
+            var request = mapper.Map<TaskBoard>(board);
+
+            var result = await mediator.Send(
+                new UpdateTaskBoardCommand(
+                    id: request.Id,
+                    title: request.Title,
+                    description: request.Description,
+                    lists: request.Lists
+                ));
+
+            return result;
         }
 
-        [HttpDelete("{id:int}")]
-        public async Task<ActionResult> DeleteTaskBoard(int id)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<bool>> DeleteTaskBoard(string id)
         {
-            return Ok();
+            var result = await mediator.Send(new DeleteTaskBoardCommand(id: id));
+
+            return Ok(result);
         }
     }
 }

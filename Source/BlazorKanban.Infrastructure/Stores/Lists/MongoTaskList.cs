@@ -5,6 +5,12 @@ namespace BlazorKanban.Infrastructure.Stores.Lists
 {
     public class MongoTaskList : MongoStoreBaseEntity
     {
+        public MongoTaskList()
+        {
+            Title = string.Empty;
+            Description = string.Empty;
+        }
+
         // reference to MongoBoard
         public ObjectId BoardId { get; set; }
 

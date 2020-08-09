@@ -28,13 +28,18 @@ namespace BlazorKanban.Infrastructure.Stores.Lists
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
+        public string GenerateIdentifier()
+        {
+            return ObjectId.GenerateNewId().ToString();
+        }
+
         public async Task<string> CreateAsync(TList list, CancellationToken cancellationToken)
         {
             if (list == null) throw new ArgumentNullException(nameof(list));
 
             var mongoList = mapper.Map<TList, TMongoCollection>(list);
 
-            var foundList = await _listsCollection.FirstOrDefaultAsync(x => x.Id == mongoList.Id, cancellationToken).ConfigureAwait(false);
+            var foundList = await _listsCollection.FirstOrDefaultAsync(x => x.Title == mongoList.Title, cancellationToken).ConfigureAwait(false);
 
             if (foundList == null) await _listsCollection.InsertOneAsync(mongoList, cancellationToken: cancellationToken).ConfigureAwait(false);
 
@@ -47,18 +52,23 @@ namespace BlazorKanban.Infrastructure.Stores.Lists
 
             var mongoList = mapper.Map<TList, TMongoCollection>(list);
 
-            await _listsCollection.ReplaceOneAsync(x => x.Id == mongoList.Id, mongoList, cancellationToken: cancellationToken).ConfigureAwait(false);
+            var updateDefinition =
+                Builders<TMongoCollection>.Update
+                .Set(l => l.Title, mongoList.Title)
+                .Set(l => l.Description, mongoList.Description);
+
+            await _listsCollection.UpdateOneAsync(x => x.Id == mongoList.Id, updateDefinition, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             return mongoList.Id.ToString();
         }
 
-        public async Task<bool> DeleteAsync(TList list, CancellationToken cancellationToken)
+        public async Task<bool> DeleteAsync(string Id, CancellationToken cancellationToken)
         {
-            if (list == null) throw new ArgumentNullException(nameof(list));
+            if (Id == null) throw new ArgumentNullException(nameof(Id));
+            
+            var mongoListId = ObjectId.Parse(Id);
 
-            var mongoList = mapper.Map<TList, TMongoCollection>(list);
-
-            var result = await _listsCollection.DeleteOneAsync(x => x.Id == mongoList.Id, cancellationToken).ConfigureAwait(false);
+            var result = await _listsCollection.DeleteOneAsync(x => x.Id == mongoListId, cancellationToken).ConfigureAwait(false);
 
             if (result.DeletedCount > 0)
             {

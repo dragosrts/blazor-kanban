@@ -28,13 +28,18 @@ namespace BlazorKanban.Infrastructure.Stores.Cards
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
+        public string GenerateIdentifier()
+        {
+            return ObjectId.GenerateNewId().ToString();
+        }
+
         public async Task<string> CreateAsync(TCard card, CancellationToken cancellationToken)
         {
             if (card == null) throw new ArgumentNullException(nameof(card));
             
             var mongoCard = mapper.Map<TCard, TMongoCollection>(card);
 
-            var foundCard = await _cardsCollection.FirstOrDefaultAsync(x => x.Id == mongoCard.Id, cancellationToken).ConfigureAwait(false);
+            var foundCard = await _cardsCollection.FirstOrDefaultAsync(x => x.Title == mongoCard.Title, cancellationToken).ConfigureAwait(false);
 
             if (foundCard == null) await _cardsCollection.InsertOneAsync(mongoCard, cancellationToken: cancellationToken).ConfigureAwait(false);
 
@@ -47,18 +52,23 @@ namespace BlazorKanban.Infrastructure.Stores.Cards
 
             var mongoCard = mapper.Map<TCard, TMongoCollection>(card);
 
-            await _cardsCollection.ReplaceOneAsync(x => x.Id == mongoCard.Id, mongoCard, cancellationToken: cancellationToken).ConfigureAwait(false);
+            var updateDefinition =
+                Builders<TMongoCollection>.Update
+                .Set(c => c.Title, mongoCard.Title)
+                .Set(c => c.Description, mongoCard.Description);
+
+            await _cardsCollection.UpdateOneAsync(x => x.Id == mongoCard.Id, updateDefinition, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             return mongoCard.Id.ToString();
         }
 
-        public async Task<bool> DeleteAsync(TCard card, CancellationToken cancellationToken)
+        public async Task<bool> DeleteAsync(string Id, CancellationToken cancellationToken)
         {
-            if (card == null) throw new ArgumentNullException(nameof(card));
+            if (Id == null) throw new ArgumentNullException(nameof(Id));
 
-            var mongoCard = mapper.Map<TCard, TMongoCollection>(card);
+            var mongoCardId = ObjectId.Parse(Id);
 
-            var result = await _cardsCollection.DeleteOneAsync(x => x.Id == mongoCard.Id, cancellationToken).ConfigureAwait(false);
+            var result = await _cardsCollection.DeleteOneAsync(x => x.Id == mongoCardId, cancellationToken).ConfigureAwait(false);
 
             if (result.DeletedCount > 0)
             {

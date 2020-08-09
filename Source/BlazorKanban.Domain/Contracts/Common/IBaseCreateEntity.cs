@@ -2,5 +2,6 @@
 {
     public interface IBaseCreateEntity
     {
+        string GenerateIdentifier();
     }
 }

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BlazorKanban.Application.TaskBoards.Queries.GetTaskBoardDetail
+namespace BlazorKanban.Application.TaskBoards.Queries.GetTaskBoard
 {
     public class GetTaskBoardDetailQueryHandler : IRequestHandler<GetTaskBoardDetailQuery, TaskBoard>
     {
@@ -27,24 +27,42 @@ namespace BlazorKanban.Application.TaskBoards.Queries.GetTaskBoardDetail
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var board = await taskBoardGetter.GetByIdAsync(request.Id, cancellationToken).ConfigureAwait(false);
+            var boardResult = await taskBoardGetter.GetByIdAsync(request.Id, cancellationToken).ConfigureAwait(false);
 
-            if (board == null) throw new ArgumentNullException(nameof(board));
+            if (boardResult == null) throw new ArgumentNullException(nameof(boardResult));
 
-            var columns = await taskListGetter.GetAllByTaskBoardIdAsync(board.Id, cancellationToken);
+            var columnsResult = await taskListGetter.GetAllByTaskBoardIdAsync(boardResult.Id, cancellationToken);
 
-            foreach (var column in columns)
+            var taskLists = new List<TaskList>();
+
+            foreach (var column in columnsResult)
             {
                 if (column == null) throw new ArgumentNullException(nameof(column));
 
-                var cards = new List<TaskCard>();
-                cards.AddRange(await taskCardGetter.GetAllByTaskListIdAsync(column.Id, cancellationToken));
-                column.Cards = cards;
+                var taskCards = new List<TaskCard>();
+
+                taskCards.AddRange(await taskCardGetter.GetAllByTaskListIdAsync(column.Id, cancellationToken));
+
+                taskLists.Add(
+                    new TaskList(
+                        id: column.Id,
+                        boardId: column.BoardId,
+                        title: column.Title,
+                        description: column.Description,
+                        cards: taskCards
+                        )
+                    );
             }
 
-            board.Lists = columns;
+            var taskBoard =
+                new TaskBoard(
+                    id: boardResult.Id,
+                    title: boardResult.Title,
+                    description: boardResult.Description,
+                    lists: taskLists
+                );
 
-            return board;
+            return taskBoard;
         }
     }
 }

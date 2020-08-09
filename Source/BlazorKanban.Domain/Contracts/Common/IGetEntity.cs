@@ -5,6 +5,6 @@ namespace BlazorKanban.Domain.Contracts.Common
 {
     public interface IGetEntity<T> : IBaseGetEntity
     {
-        public Task<T> GetByIdAsync(string Id, CancellationToken cancellationToken);
+        Task<T> GetByIdAsync(string Id, CancellationToken cancellationToken);
     }
 }
