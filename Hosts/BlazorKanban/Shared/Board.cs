@@ -10,6 +10,6 @@ namespace BlazorKanban.Shared
 
         public string Description { get; set; }
 
-        public IEnumerable<Column> Columns { get; set; }
+        public IList<Column> Columns { get; set; }
     }
 }

@@ -12,6 +12,6 @@ namespace BlazorKanban.Shared
 
         public string Description { get; set; }
 
-        public IEnumerable<Card> Cards { get; set; }
+        public IList<Card> Cards { get; set; }
     }
 }
