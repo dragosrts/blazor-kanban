@@ -1,4 +1,5 @@
-﻿using BlazorKanban.Client.Services;
+﻿using Blazored.Modal;
+using BlazorKanban.Client.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BlazorKanban.Client
@@ -7,7 +8,11 @@ namespace BlazorKanban.Client
     {
         public static IServiceCollection AddBlazorDragDrop(this IServiceCollection services)
         {
-            return services.AddScoped<DragDropService>();
+            services.AddBlazoredModal();
+
+            services.AddScoped<DragDropService>();
+
+            return services;
         }
     }
 }

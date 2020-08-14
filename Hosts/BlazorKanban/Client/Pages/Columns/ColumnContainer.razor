@@ -1,0 +1,54 @@
+﻿@using BlazorKanban.Shared
+@using BlazorKanban.Client.Pages.Cards
+@using BlazorKanban.Client.Shared.Components.DragDrop
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+@if (Column == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="col-sm-6 col-md-4 col-xl-3">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h6 class="card-title text-uppercase text-truncate py-2">@Column.Title</h6>
+                <div class="items border border-light">
+
+                    <Dropzone>
+                        @foreach (var card in Column.Cards)
+                        {
+                            <Draggable>
+                                <CardContainer Card="card" />
+                            </Draggable>
+                        }
+                    </Dropzone>
+
+                    <button class="btn btn-primary btn-sm" @onclick="ShowModal">Add Card</button>
+
+                    @*<CardEdit IsVisible="IsVisibleCardEdit" Title="New Card"></CardEdit>*@
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Column Column { get; set; }
+
+    [CascadingParameter]
+    public IModalService Modal { get; set; }
+
+    private bool IsVisibleCardEdit { get; set; } = false;
+
+    private void ShowModal()
+    {
+        //var parameters = new ModalParameters();
+        //parameters.Add(nameof(Card.Id), 1);
+
+        Modal.Show<CardEdit>("Edit Movie");
+    }
+}

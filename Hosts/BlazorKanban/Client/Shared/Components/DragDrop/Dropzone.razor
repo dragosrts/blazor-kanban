@@ -2,8 +2,8 @@
 @using Microsoft.Extensions.Logging;
 @using BlazorKanban.Client.Services
 
-@inject ILogger<Dropzone> Logger;
 @implements IDisposable;
+@inject ILogger<Dropzone> Logger;
 @inject DragDropService DragDropService;
 
 <div ondragover="event.preventDefault();"
@@ -28,8 +28,8 @@
             {
                 if (AllowDrag(frag.Id)) // allow dragging
                 {
-                    <div draggable="true" 
-                         @key="frag" 
+                    <div draggable="true"
+                         @key="frag"
                          @ondragstart="()=>OnDragStart(frag.Id)"
                          @ondragenter="(e)=>OnDragEnter(frag.Id,e)"
                          @ondragleave="(e)=>OnDragLeave(frag.Id,e)"
@@ -60,9 +60,7 @@
             }
         }
     }
-
 </div>
-
 
 @code {
 
@@ -82,13 +80,11 @@
     [Parameter]
     public bool AllowSwap { get; set; }
 
-
     /// <summary>
     /// Allows to pass a delegate which executes if something is dropped and decides if the item is accepted
     /// </summary>
     [Parameter]
     public Func<dynamic, bool> Accepts { get; set; }
-
 
     /// <summary>
     /// Gets or set css parameters for this component
@@ -105,9 +101,7 @@
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
-
     public int Id { get => _dropzoneId; }
-
 
     /// <summary>
     /// Registers a new draggable item for this dropzone
@@ -127,7 +121,6 @@
     {
         return DragDropService.GetDraggablesForDropzone(_dropzoneId);
     }
-
 
     private string fixedDropzoneClass = "dropzone rounded";
 
@@ -151,9 +144,7 @@
         {
             return true;
         }
-
     }
-
 
     private string GetNoPointerClass(int draggableId)
     {
@@ -199,7 +190,6 @@
                 cssPart = cssPart + " " + draggableItem.OtherAttributes["class"].ToString();
             }
         }
-
 
         return $"draggable {cssPart}";
     }
@@ -279,7 +269,6 @@
         await InvokeAsync(() => StateHasChanged());
     }
 
-
     private void Ondrop()
     {
         _currentDraggedOverId = 0;
@@ -289,7 +278,6 @@
 
         DragDropService.DropActiveItem(_dropzoneId);
     }
-
 
     protected override bool ShouldRender()
     {
@@ -303,5 +291,4 @@
         DragDropService.StateHasChanged -= StateHasChangedHandler;
         DragDropService.UnregisterDropzone(_dropzoneId);
     }
-
 }

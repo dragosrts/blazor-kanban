@@ -1,0 +1,25 @@
+﻿@using BlazorKanban.Shared
+
+@if (Card == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="card draggable shadow-sm" id="@Card.Id">
+        <div class="card-body p-2">
+            <div class="card-title">
+                <img src="//placehold.it/30" class="rounded-circle float-right" />
+                <a href="" class="lead font-weight-light">@Card.Title</a>
+            </div>
+            <p>
+                @Card.Description
+            </p>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Card Card { get; set; }
+}

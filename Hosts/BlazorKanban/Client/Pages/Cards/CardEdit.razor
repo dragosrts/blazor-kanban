@@ -1,0 +1,99 @@
+﻿@if (IsVisible)
+{
+    <EditForm Model="@cardModel" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="modal fade @ModalClass" tabindex="-1" role="dialog" style="display:@ModalDisplay" aria-modal="true" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title">@Title</h5>
+                        <button type="button" class="close" aria-label="Close" @onclick="ModalClose">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="CardTitle">Title</label>
+                            <InputText @bind-Value=cardModel.Title class="form-control" id="CardTitle" />
+                        </div>
+                        <div class="form-group">
+                            <label for="CardDescription">Description</label>
+                            <InputTextArea @bind-Value=cardModel.Description class="form-control" id="CardDescription" />
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-secondary" @onclick="ModalClose">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-backdrop fade show"></div>
+    </EditForm>
+}
+
+@code  {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+
+    private BlazorKanban.Shared.Card cardModel = new BlazorKanban.Shared.Card();
+
+    [CascadingParameter]
+    public IModalService Modal { get; set; }
+
+    void SubmitForm()
+    {
+        BlazoredModal.Close(ModalResult.Ok($"Form was submitted successfully."));
+    }
+
+    void Cancel()
+    {
+        BlazoredModal.Cancel();
+    }
+
+    private void HandleValidSubmit()
+    {
+        Console.WriteLine("OnValidSubmit");
+    }
+
+    [Parameter]
+    public bool IsVisible { get; set; } = false;
+
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
+
+    protected string ModalDisplay = "none;";
+    protected string ModalClass = "";
+
+    protected override void OnInitialized()
+    {
+        this.ModalOpen(string.Empty);
+    }
+
+    public void ModalOpen(string title)
+    {
+        Title = title;
+        IsVisible = true;
+
+        ModalDisplay = "block;";
+        ModalClass = "show";
+
+        StateHasChanged();
+    }
+
+    public void ModalClose()
+    {
+        IsVisible = false;
+        Title = "";
+
+        ModalDisplay = "none;";
+        ModalClass = "";
+
+        BlazoredModal.Cancel();
+    }
+}

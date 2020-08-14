@@ -1,36 +1,35 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager navigationManager
+@using BlazorKanban.Client.Shared.Components.Modal; 
 
+<header class="drawer-header">
+    <div class="drawer-logo">
+        <img alt="Blazor" class="logo-img" src="~/icon-512.png" title="Blazor">
+        <a class="miniHover" href="/">Blazor</a>
+    </div>
+</header>
 
-    <header class="drawer-header">
-        <div class="drawer-logo">
-            <img alt="Blazor" class="logo-img" src="~/icon-512.png" title="Blazor">
-            <a class="miniHover" href="/">Blazor</a>
-        </div>
-    </header>
+<section class="container-fluid">
+    @Body
+</section>
 
+@code {
+    bool appBarFixed = true;
+    bool navMenuOpened = true;
+    public string bbDrawerClass = "";
 
-    <section class="container-fluid">
-        @Body
-    </section>
-
-    @code {
-        bool appBarFixed = true;
-        bool navMenuOpened = true;
-        public string bbDrawerClass = "";
-
-        void NavToggle()
+    void NavToggle()
+    {
+        navMenuOpened = !navMenuOpened;
+        if (navMenuOpened)
         {
-            navMenuOpened = !navMenuOpened;
-            if (navMenuOpened)
-            {
-                bbDrawerClass = "full";
-            }
-            else
-            {
-                bbDrawerClass = "closed";
-            }
-
-            this.StateHasChanged();
+            bbDrawerClass = "full";
         }
+        else
+        {
+            bbDrawerClass = "closed";
+        }
+
+        this.StateHasChanged();
     }
+}

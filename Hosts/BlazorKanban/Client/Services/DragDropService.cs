@@ -3,8 +3,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BlazorKanban.Client.Services
 {
@@ -38,7 +36,6 @@ namespace BlazorKanban.Client.Services
         {
             _dic[item.DropzoneId].Remove(item);
         }
-
 
         /// <summary>
         /// Removes all items from a dropzone.
@@ -85,7 +82,6 @@ namespace BlazorKanban.Client.Services
             return _idDraggableCounter;
         }
 
-
         public void DropActiveItem(int targetDropzoneId)
         {
             _logger?.LogTrace($"Trying to Drop ActiveItem {ActiveItem.Id} from Dropzone {ActiveItem.DropzoneId} at Dropzone {targetDropzoneId}");
@@ -97,7 +93,6 @@ namespace BlazorKanban.Client.Services
 
             if (targetDropzoneId == ActiveItem.DropzoneId)
             {
-
                 //inform about the drop
                 ActiveItem.OnDrop?.Invoke(ActiveItem);
                 //Clear active item
@@ -106,7 +101,6 @@ namespace BlazorKanban.Client.Services
                 _logger?.LogTrace($"Droped in same dropzone.");
                 return;
             }
-
 
             //no drop accept // max-item limit
             if (!acceptsDrop || maxItemLimitReached && !allowSwap)
@@ -131,8 +125,7 @@ namespace BlazorKanban.Client.Services
                 _lastDraggedOverItem = null;
             }
 
-
-            //remove active item from sourcedropzone 
+            //remove active item from sourcedropzone
             _dic[ActiveItem.DropzoneId].Remove(ActiveItem);
 
             //insert active into new dropzone
@@ -161,7 +154,6 @@ namespace BlazorKanban.Client.Services
             {
                 return 0;
             }
-
         }
 
         public void SetActiveItem(int dropzoneId, int draggableId)
@@ -187,7 +179,7 @@ namespace BlazorKanban.Client.Services
 
             _lastDraggedOverItem = draggedOverItem;
 
-            //drop not accepted due to delegate 
+            //drop not accepted due to delegate
             if (!acceptsDrop)
             {
                 _logger?.LogTrace($"SwapOrInsert rejected. Accept Func: {acceptsDrop}");
@@ -255,7 +247,6 @@ namespace BlazorKanban.Client.Services
             dropzone[activeItemPosition] = draggedOverItem;
         }
 
-
         internal void MoveActiveItem(int targetDropzoneId, int index)
         {
             var activeItemDropzoneId = ActiveItem.DropzoneId;
@@ -268,7 +259,6 @@ namespace BlazorKanban.Client.Services
 
             //insert into new dropzone
             _dic[ActiveItem.DropzoneId].Insert(index, ActiveItem);
-
         }
 
         public void RegisterDropzone(int dropzoneId, DropzoneProperty options)
@@ -293,7 +283,6 @@ namespace BlazorKanban.Client.Services
             _DropzoneProperty.Remove(dropzoneId);
 
             SupressRendering = false;
-
         }
 
         public void RegisterDraggableForDropzone(DraggableProperty dataItem)
@@ -304,7 +293,6 @@ namespace BlazorKanban.Client.Services
 
             StateHasChanged?.Invoke();
         }
-
 
         public bool HasDropzoneDraggables(int dropzoneId)
         {
@@ -323,7 +311,6 @@ namespace BlazorKanban.Client.Services
 
             return HasDropzoneDraggables(hit.Key);
         }
-
 
         public List<DraggableProperty> GetDraggablesForDropzone(string dropzoneName)
         {

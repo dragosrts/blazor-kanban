@@ -5,7 +5,6 @@
 
 Welcome to your new app.
 
-
 <div class="container-fluid pt-3">
     <div class="card-body">
         <a href="boards">
@@ -14,30 +13,62 @@ Welcome to your new app.
     </div>
 </div>
 
+<button class="btn btn-primary" @onclick="@ModalOpen">Show Dialog!</button>
 
+@if (showModal)
+{
+    <div class="modal fade @ModalClass" tabindex="-1" role="dialog" style="display:@ModalDisplay" aria-modal="true" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
 
-@*<div id="main" class="container-fluid">
-    <p>Drag the list items:</p>
-    <ul>
-        <Dropzone>
-            <Draggable>
-                <li class="list-group-item">Cras justo odio (order-pos: @context.OrderPosition)</li>
-            </Draggable>
-            <Draggable>
-                <li class="list-group-item">Dapibus ac facilisis in (order-pos: @context.OrderPosition)</li>
-            </Draggable>
-            <Draggable>
-                <li class="list-group-item">Morbi leo risus (order-pos: @context.OrderPosition)</li>
-            </Draggable>
-            <Draggable>
-                <li class="list-group-item">Porta ac consectetur ac (order-pos: @context.OrderPosition)</li>
-            </Draggable>
-            <Draggable>
-                <li class="list-group-item">Vestibulum at eros (order-pos: @context.OrderPosition)</li>
-            </Draggable>
-        </Dropzone>
-    </ul>
-</div>
-<hr />
-<h5>Code:</h5>*@
-@*<DisplayCode>&lt;ul&gt;<br />    &lt;Dropzone&gt;<br />        &lt;Draggable&gt;<br />            &lt;li class=&quot;list-group-item&quot;&gt;Cras justo odio (order-pos: @@context.OrderPosition)&lt;/li&gt;<br />        &lt;/Draggable&gt;<br />        &lt;Draggable&gt;<br />            &lt;li class=&quot;list-group-item&quot;&gt;Dapibus ac facilisis in (order-pos: @@context.OrderPosition)&lt;/li&gt;<br />        &lt;/Draggable&gt;<br />        &lt;Draggable&gt;<br />            &lt;li class=&quot;list-group-item&quot;&gt;Morbi leo risus (order-pos: @@context.OrderPosition)&lt;/li&gt;<br />        &lt;/Draggable&gt;<br />        &lt;Draggable&gt;<br />            &lt;li class=&quot;list-group-item&quot;&gt;Porta ac consectetur ac (order-pos: @@context.OrderPosition)&lt;/li&gt;<br />        &lt;/Draggable&gt;<br />        &lt;Draggable&gt;<br />            &lt;li class=&quot;list-group-item&quot;&gt;Vestibulum at eros (order-pos: @@context.OrderPosition)&lt;/li&gt;<br />        &lt;/Draggable&gt;<br />    &lt;/Dropzone&gt;<br />&lt;/ul&gt;</DisplayCode>*@
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="close" aria-label="Close" @onclick="@ModalClose">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <p>Modal body text goes here.</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @onclick="ModalOk">Save changes</button>
+                    <button type="button" class="btn btn-secondary" @onclick="@ModalClose">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop fade show"></div>
+}
+
+@code {
+
+    bool showModal = false;
+
+    public string ModalDisplay = "none;";
+    public string ModalClass = "";
+
+    public void ModalOpen()
+    {
+        ModalDisplay = "block;";
+        ModalClass = "show";
+        showModal = true;
+        StateHasChanged();
+    }
+
+    public void ModalClose()
+    {
+        ModalDisplay = "none;";
+        ModalClass = "";
+        showModal = false;
+        StateHasChanged();
+    }
+
+    void ModalOk()
+    {
+        Console.WriteLine("Modal ok");
+        showModal = false;
+    }
+}
