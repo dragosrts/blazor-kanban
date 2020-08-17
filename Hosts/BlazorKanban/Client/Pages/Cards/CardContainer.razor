@@ -2,21 +2,27 @@
 
 @if (Card == null)
 {
-    <p><em>Loading...</em></p>
+    <MatProgressBar Indeterminate="true"></MatProgressBar>
 }
 else
 {
-    <div class="card draggable shadow-sm" id="@Card.Id">
-        <div class="card-body p-2">
-            <div class="card-title">
-                <img src="//placehold.it/30" class="rounded-circle float-right" />
-                <a href="" class="lead font-weight-light">@Card.Title</a>
-            </div>
-            <p>
+    <MatCard Class="card-block">
+        <MatCardContent Class="p-3">
+            <MatHeadline6>
+                @Card.Title
+            </MatHeadline6>
+
+            <MatBody2>
                 @Card.Description
-            </p>
-        </div>
-    </div>
+            </MatBody2>
+
+            <MatCardActions>
+                <MatCardActionButtons>
+                    <MatButton Icon="@MatIconNames.Edit">Edit</MatButton>
+                </MatCardActionButtons>
+            </MatCardActions>
+        </MatCardContent>
+    </MatCard>
 }
 
 @code {

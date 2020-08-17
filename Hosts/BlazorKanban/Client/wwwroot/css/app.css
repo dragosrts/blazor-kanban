@@ -182,13 +182,66 @@ app {
     }
 }
 
-.card.draggable {
-    margin-bottom: 1rem;
-    cursor: grab;
+.card-block {
+    background-color: rgba(0, 0, 0, 0);
+    margin: 7px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
 }
 
-.droppable {
-    background-color: var(--success);
-    min-height: 120px;
+    .card-block:hover {
+        cursor: pointer;
+    }
+
+.column-block {
+    background-color: rgba(0, 0, 0, 0);
+    margin: 7px;
+    border-radius: 5px;
+    box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.2);
+}
+
+    .column-block:hover {
+        cursor: pointer;
+    }
+
+.item-dropzone {
+    min-height: 40px;
     margin-bottom: 1rem;
 }
+
+.item-boundaries {
+    width: 375px;
+    word-wrap: break-word;
+}
+
+.plk-dd-spacing {
+    height: 10px;
+}
+
+.plk-dd-spacing-dragged-over {
+    padding: 25px;
+}
+
+.plk-dd-dragged-over {
+    background-color: rgba(0, 0, 0, 0.2);
+    opacity: 0.9;
+    animation: blinker 1s linear infinite;
+}
+
+    .plk-dd-dragged-over > div {
+        background-color: lightgray;
+        opacity: 0.9;
+        animation: blinker 1s linear infinite;
+    }
+
+.blink_me {
+    animation: blinker 1s linear infinite;
+}
+
+.plk-dd-in-transit {
+    opacity: 0.9
+}
+
+    .plk-dd-in-transit > div {
+        opacity: 0.9
+    }

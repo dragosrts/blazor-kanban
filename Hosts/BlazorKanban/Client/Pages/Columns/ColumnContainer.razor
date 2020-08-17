@@ -4,29 +4,56 @@
 
 @if (Column == null)
 {
-    <p><em>Loading...</em></p>
+    <MatProgressBar Indeterminate="true"></MatProgressBar>
 }
 else
 {
-    <div class="col-sm-6 col-md-4 col-xl-3">
-        <div class="card bg-light">
-            <div class="card-body">
-                <h6 class="card-title text-uppercase text-truncate py-2">@Column.Title</h6>
-                <div class="items border border-light">
 
-                    <Dropzone Items="Column.Cards" TItem="Card" OnItemDrop="UpdateCard">
-                        <CardContainer Card="@context" />
-                    </Dropzone>
+    <MatCard Id="@Column.Id" Class="@Class">
+        <MatCardContent>
+            <MatAccordion>
+                <MatExpansionPanel>
+                    <MatExpansionPanelSummary>
+                        <MatExpansionPanelHeader>
+                            <MatHeadline6>
+                                @Column.Title
+                            </MatHeadline6>
+                        </MatExpansionPanelHeader>
+                    </MatExpansionPanelSummary>
+                    <MatExpansionPanelDetails>
+                        <MatSubtitle2>
+                            @Column.Description
+                        </MatSubtitle2>
+                        <MatCardActions>
+                            <MatCardActionButtons>
+                                <MatButton Icon="@MatIconNames.Edit">Edit</MatButton>
+                            </MatCardActionButtons>
+                        </MatCardActions>
+                    </MatExpansionPanelDetails>
+                </MatExpansionPanel>
+            </MatAccordion>
 
-                    <button class="btn btn-primary btn-sm" @onclick="ShowModal">Add Card</button>
-                </div>
-            </div>
-        </div>
-    </div>
+            <MatBody2>
+                <Dropzone Id="@Column.Id" Class="m-3 item-dropzone" Style="DragDropStyle.Custom" Items="Column.Cards" TItem="Card" OnItemDrop="UpdateCard" InstantReplace="true">
+                    <CardContainer Card="@context" />
+                </Dropzone>
+            </MatBody2>
+        </MatCardContent>
+
+        <MatCardActions>
+            <MatCardActionButtons>
+                <MatButton @onclick="ShowModal">Add Card</MatButton>
+            </MatCardActionButtons>
+        </MatCardActions>
+    </MatCard>
 }
 
 @code {
+    bool panelOpenState;
+
     [CascadingParameter] public IModalService Modal { get; set; }
+
+    [Parameter] public string Class { get; set; }
 
     [Parameter] public Column Column { get; set; }
 

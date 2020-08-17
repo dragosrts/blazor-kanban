@@ -3,27 +3,28 @@
 @using BlazorKanban.Shared
 @inject HttpClient Http
 
-
 <h1>Boards</h1>
 <p>This component demonstrates fetching data from the server.</p>
 
 @if (board == null)
 {
-    <p><em>Loading...</em></p>
+    <MatProgressBar Indeterminate="true"></MatProgressBar>
 }
 else
 {
     @*@foreach (var board in board)
         {*@
-    <div class="container-fluid pt-3">
-        <div class="row flex-row flex-sm-nowrap py-3">
-
+    <div class="mat-layout-grid">
+        <div class="mat-layout-grid-inner row flex-row flex-sm-nowrap">
             @foreach (var column in board.Columns)
             {
-                <ColumnContainer Column="column" />
+                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">
+                    <ColumnContainer Column="column" Class="column-block item-boundaries" />
+                </div>
             }
-
-            <button class="btn btn-primary btn-sm">Add Column</button>
+            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">
+                <MatButton Outlined="true" Dense="true" Icon="@MatIconNames.View_column" Class="column-block item-boundaries" OnClick="AddColumn">Add Column</MatButton>
+            </div>
         </div>
     </div>
 
@@ -36,5 +37,10 @@ else
     protected override async Task OnInitializedAsync()
     {
         board = await Http.GetFromJsonAsync<Board>("api/taskboards/5f2c15d77a65952d71665819");
+    }
+
+    private void AddColumn()
+    {
+        // Update the card with the new column id
     }
 }
