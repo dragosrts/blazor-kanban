@@ -87,5 +87,10 @@ namespace BlazorKanban.Infrastructure.Stores.Boards
 
             return domainBoard;
         }
+
+        public Task<TBoard> GetAllBoardsAsync(CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

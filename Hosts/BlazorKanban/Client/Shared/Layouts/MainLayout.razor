@@ -1,34 +1,21 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager navigationManager
 
-<header class="drawer-header">
-    <div class="drawer-logo">
-        <img alt="Blazor" class="logo-img" src="~/icon-512.png" title="Blazor">
-        <a class="miniHover" href="/">Blazor</a>
-    </div>
-</header>
-
-<section class="container-fluid">
-    @Body
-</section>
-
-@code {
-    bool appBarFixed = true;
-    bool navMenuOpened = true;
-    public string bbDrawerClass = "";
-
-    void NavToggle()
-    {
-        navMenuOpened = !navMenuOpened;
-        if (navMenuOpened)
-        {
-            bbDrawerClass = "full";
-        }
-        else
-        {
-            bbDrawerClass = "closed";
-        }
-
-        this.StateHasChanged();
-    }
-}
+<MatAppBarContainer>
+    <MatAppBar Fixed="true">
+        <MatAppBarRow>
+            <MatAppBarSection>
+                <MatAppBarTitle>&nbsp; Blazor Kanban</MatAppBarTitle>
+            </MatAppBarSection>
+            <MatAppBarSection Align="@MatAppBarSectionAlign.End">
+                <MatIconButton Icon="@MatIconNames.Home" Link="@navigationManager.BaseUri"></MatIconButton>
+                <MatIconButton Icon="@MatIconNames.Account_circle"></MatIconButton>
+            </MatAppBarSection>
+        </MatAppBarRow>
+    </MatAppBar>
+    <MatAppBarContent>
+        <section class="container-fluid">
+            @Body
+        </section>
+    </MatAppBarContent>
+</MatAppBarContainer>
