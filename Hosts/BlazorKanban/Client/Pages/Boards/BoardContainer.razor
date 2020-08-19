@@ -1,7 +1,8 @@
 ﻿@page "/board/{id}"
-@using BlazorKanban.Client.Pages.Columns
-@using BlazorKanban.Shared
+@attribute [Authorize]
 @inject HttpClient Http
+@using BlazorKanban.Client.Pages.Columns
+
 
 @if (board == null)
 {

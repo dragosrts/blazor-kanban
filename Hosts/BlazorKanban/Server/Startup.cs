@@ -1,12 +1,20 @@
+using AspNetCore.Identity.Mongo;
 using AutoMapper;
 using BlazorKanban.Application;
 using BlazorKanban.Infrastructure;
+using BlazorKanban.Server.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace BlazorKanban.Server
 {
@@ -31,10 +39,59 @@ namespace BlazorKanban.Server
                 mongo.ConnectionString = kanbanDBConnectionString;
             });
 
+            services.AddIdentityMongoDbProvider<ApplicationUser>(
+
+                identityOptions =>
+                {
+                    // Password settings
+                    identityOptions.Password.RequiredLength = 6;
+                    identityOptions.Password.RequireLowercase = false;
+                    identityOptions.Password.RequireUppercase = false;
+                    identityOptions.Password.RequireNonAlphanumeric = 
+                    false;
+                    identityOptions.Password.RequireDigit = false;
+                    // Lockout settings
+                    identityOptions.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+                    identityOptions.Lockout.MaxFailedAccessAttempts = 10;
+                    identityOptions.Lockout.AllowedForNewUsers = true;
+
+                    // User settings
+                    identityOptions.User.RequireUniqueEmail = false;
+                },
+
+                mongoIdentityOptions =>
+                {
+                    mongoIdentityOptions.ConnectionString = kanbanDBConnectionString;
+                }
+            );
+
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.HttpOnly = false;
+                options.Cookie.IsEssential = true;
+                options.Events.OnRedirectToLogin = context =>
+                {
+                    context.Response.StatusCode = 401;
+                    return Task.CompletedTask;
+                };
+            });
+
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-            services.AddControllersWithViews();
+            services.AddControllers();
             services.AddRazorPages();
+
+            services.AddResponseCompression(opts =>
+            {
+                opts.MimeTypes =
+                    ResponseCompressionDefaults.MimeTypes.Concat(new[] { "application/octet-stream" });
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,6 +114,8 @@ namespace BlazorKanban.Server
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

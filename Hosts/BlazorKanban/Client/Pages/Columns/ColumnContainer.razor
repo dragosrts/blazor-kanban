@@ -1,6 +1,6 @@
-﻿@using BlazorKanban.Shared
-@using BlazorKanban.Client.Pages.Cards
+﻿@attribute [Authorize]
 @inject HttpClient Http
+@using BlazorKanban.Client.Pages.Cards
 
 @if (Column == null)
 {

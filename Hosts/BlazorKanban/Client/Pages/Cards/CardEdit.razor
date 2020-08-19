@@ -1,4 +1,5 @@
 ﻿@page "/card/create";
+@attribute [Authorize]
 @inject HttpClient Http
 
 <EditForm Model="@cardModel" OnValidSubmit="HandleValidSubmit">
@@ -7,7 +8,7 @@
 
     <div class="form-group">
         @*<label for="card-title">Card Title</label>
-        <input @bind="@cardModel.Title" type="text" class="form-control" id="card-title" />*@
+            <input @bind="@cardModel.Title" type="text" class="form-control" id="card-title" />*@
         <p>
             <MatTextField Id="card-title" @bind-Value="@cardModel.Title" Label="Card Title" FullWidth="true"></MatTextField>
         </p>
@@ -15,7 +16,7 @@
 
     <div class="form-group">
         @*<label for="card-description">Card Description</label>
-        <input @bind="@cardModel.Description" type="text" class="form-control" id="card-description" />*@
+            <input @bind="@cardModel.Description" type="text" class="form-control" id="card-description" />*@
         <p>
             <MatTextField Id="card-description" @bind-Value="@cardModel.Description" Label="Card Description" TextArea="true" FullWidth="true"></MatTextField>
         </p>

@@ -5,12 +5,14 @@ using BlazorKanban.Application.TaskCards.Commands.UpdateTaskCard;
 using BlazorKanban.Domain.Objects.Entities;
 using BlazorKanban.Shared;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace BlazorKanban.Server.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class TaskCardsController : ControllerBase
