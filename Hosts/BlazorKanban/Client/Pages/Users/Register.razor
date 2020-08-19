@@ -3,40 +3,42 @@
 @inject NavigationManager navigationManager
 @inject IdentityAuthenticationStateProvider authStateProvider
 
-<h1 class="h2 font-weight-normal login-title">
-    Blazor with Identity Sample
-</h1>
+<MatCard>
+    <div class="logo">
+        <h4>Create Account</h4>
+    </div>
 
-<EditForm class="form-signin" OnValidSubmit="OnSubmit" Model="registerParameters">
-    <DataAnnotationsValidator />
-    <h4 class="font-weight-normal text-center">Create Account</h4>
+    <EditForm Model="registerParameters" OnValidSubmit="RegisterUser">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <fieldset>
+            <div class="form-group">
+                <MatTextField @bind-Value="@registerParameters.UserName" Label="User Name" Icon="person" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+            </div>
+            <div class="form-group">
+                <MatTextField @bind-Value="@registerParameters.Password" Label="Password" Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+            </div>
+            <div class="form-group">
+                <MatTextField @bind-Value="@registerParameters.PasswordConfirm" Label="Password Confirmation" Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+            </div>
+            <div class="form-group d-flex justify-content-end">
+                <MatButton Type="submit" Raised="true">Create account</MatButton>
+            </div>
+            <hr />
+            <label class="text-danger">@error</label>
+            <NavLink href="login">
+                <h6 class="font-weight-normal text-center">Already have an account? Click here to login</h6>
+            </NavLink>
+        </fieldset>
+    </EditForm>
+</MatCard>
 
-    <label for="inputUsername" class="sr-only">User Name</label>
-    <InputText id="inputUsername" class="form-control" placeholder="Username" autofocus @bind-Value="@registerParameters.UserName" />
-    <ValidationMessage For="@(() => registerParameters.UserName)" />
-
-    <label for="inputPassword" class="sr-only">Password</label>
-    <InputText type="password" id="inputPassword" class="form-control" placeholder="Password" @bind-Value="@registerParameters.Password" />
-    <ValidationMessage For="@(() => registerParameters.Password)" />
-
-    <label for="inputPasswordConfirm" class="sr-only">Password Confirmation</label>
-    <InputText type="password" id="inputPasswordConfirm" class="form-control" placeholder="Password Confirmation" @bind-Value="@registerParameters.PasswordConfirm" />
-    <ValidationMessage For="@(() => registerParameters.PasswordConfirm)" />
-
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Create account</button>
-
-    <label class="text-danger">@error</label>
-    <NavLink href="login">
-        <h6 class="font-weight-normal text-center">Already have an account? Click here to login</h6>
-    </NavLink>
-</EditForm>
-
-@functions{
+@code{
 
     RegisterParameters registerParameters { get; set; } = new RegisterParameters();
     string error { get; set; }
 
-    async Task OnSubmit()
+    async Task RegisterUser()
     {
         error = null;
         try

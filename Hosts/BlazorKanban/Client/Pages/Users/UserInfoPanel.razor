@@ -1,0 +1,78 @@
+﻿@using Microsoft.AspNetCore.Components
+@inject NavigationManager navigationManager
+@inject IdentityAuthenticationStateProvider authStateProvider
+
+<style>
+    .userinfo-menu-offset-down {
+        transform: translateY(36px);
+    }
+</style>
+
+<AuthorizeView Context="AuthorizeContext">
+    <Authorized>
+        <div class="mat-elevation-z24 m-2">
+            <MatTooltip Tooltip="@HOME_TOOLTIP">
+                <MatButton Link="@navigationManager.BaseUri" Label="@HOME_LABEL" RefBack="@context" Icon="home" Raised="true"></MatButton>
+            </MatTooltip>
+        </div>
+        <div class="mat-elevation-z24 m-2">
+            <MatTooltip Tooltip="@ACCOUNT_TOOLTIP">
+                <MatButton OnClick="UserInfoClick" Label="@ACCOUNT_LABEL" RefBack="@context" @ref="@UserInfoButton" Icon="account_box" Raised="true"></MatButton>
+            </MatTooltip>
+        </div>
+        <MatMenu @ref="UserInfoMenu" Class="userinfo-menu-offset-down">
+            <MatList>
+                <MatListItem>
+                    <MatButton OnClick="LogoutClick" Label="@LOGOUT_LABEL" Icon="exit_to_app"></MatButton>
+                </MatListItem>
+            </MatList>
+        </MatMenu>
+    </Authorized>
+
+    <NotAuthorized>
+        <MatTooltip Tooltip="Login">
+            <MatIconButton Icon="account_box" RefBack="@context" Link="/login"></MatIconButton>
+        </MatTooltip>
+    </NotAuthorized>
+
+</AuthorizeView>
+
+@code {
+
+    private string? ACCOUNT_TOOLTIP;
+    private string? ACCOUNT_LABEL;
+    private string? LOGOUT_LABEL;
+
+    private string? HOME_TOOLTIP;
+    private string? HOME_LABEL;
+
+    UserInfoParameters? userInfo;
+
+    BaseMatButton UserInfoButton;
+    BaseMatMenu UserInfoMenu;
+
+    protected override async Task OnInitializedAsync()
+    {
+        userInfo = await authStateProvider.GetUserInfo();
+
+        ACCOUNT_TOOLTIP = $"Logout as {userInfo.UserName}";
+
+        ACCOUNT_LABEL = $"Hello, {userInfo.UserName}!";
+
+        LOGOUT_LABEL = $"Logout as {userInfo.UserName}";
+
+        HOME_TOOLTIP = $"Go to the home screen";
+        HOME_LABEL = $"Boards";
+    }
+
+    async Task UserInfoClick()
+    {
+        this.UserInfoMenu.OpenAsync(UserInfoButton.Ref);
+    }
+
+    async Task LogoutClick()
+    {
+        await authStateProvider.Logout();
+        navigationManager.NavigateTo("/login");
+    }
+}

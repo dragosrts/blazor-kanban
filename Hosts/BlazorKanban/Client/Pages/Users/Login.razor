@@ -3,43 +3,43 @@
 @inject NavigationManager navigationManager
 @inject IdentityAuthenticationStateProvider authStateProvider
 
-<h1 class="h2 font-weight-normal login-title">
-    Blazor with Identity Sample
-</h1>
-
-<EditForm class="form-signin" OnValidSubmit="OnSubmit" Model="loginParameters">
-    <DataAnnotationsValidator />
-    <h4 class="font-weight-normal text-center">Login</h4>
-
-    <label for="inputUsername" class="sr-only">User Name</label>
-    <InputText id="inputUsername" class="form-control" @bind-Value="loginParameters.UserName" autofocus placeholder="Username" />
-    <ValidationMessage For="@(() => loginParameters.UserName)" />
-
-    <label for="inputPassword" class="sr-only">Password</label>
-    <InputText type="password" id="inputPassword" class="form-control" placeholder="Password" @bind-Value="loginParameters.Password" />
-    <ValidationMessage For="@(() => loginParameters.Password)" />
-
-    <div class="form-check m-3">
-        <InputCheckbox id="inputRememberMe" class="form-check-input" @bind-Value="@loginParameters.RememberMe" />
-        <label class="form-check-label" for="inputRememberMe">Remember Me</label>
+<MatCard>
+    <div class="logo">
+        <br />
+        <h4>Log In</h4>
+        User -> Username: <b>bob</b> Password: <b>password1</b><br />
+        User -> Username: <b>alice</b> Password: <b>password1</b><br />
     </div>
-
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-
-    <label class="text-danger">@error</label>
-
-    <NavLink href="register">
-        <h6 class="font-weight-normal text-center">Create account</h6>
-    </NavLink>
-</EditForm>
+    <EditForm Model="loginParameters" OnValidSubmit="SubmitLogin">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <fieldset>
+            <div class="form-group">
+                <MatTextField id="userName" @bind-Value="@loginParameters.UserName" Label="User Name" Icon="person" IconTrailing="true" FullWidth="true" Required="true" tabindex="1"></MatTextField>
+            </div>
+            <div class="form-group">
+                <MatTextField @bind-Value="@loginParameters.Password" Label="Password" Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password" tabindex="2"></MatTextField>
+            </div>
+            <div class="form-group">
+                <MatButton class="float-right" Type="submit" Raised="true" tabindex="3">Login</MatButton>
+                <MatCheckbox @bind-Value="@loginParameters.RememberMe" class="filled-in chk-col-blue">Remember Me</MatCheckbox>
+            </div>
+            <hr />
+            <label class="text-danger">@error</label>
+            <div>
+                <MatButton class="float-left" OnClick="@Register" Raised="true">Create account</MatButton>
+            </div>
+        </fieldset>
+    </EditForm>
+</MatCard>
 
 @code{
     LoginParameters loginParameters { get; set; } = new LoginParameters();
-    string error { get; set; }
+    string error { get; set; } = string.Empty;
 
     async Task OnSubmit()
     {
-        error = null;
+        error = string.Empty;
         try
         {
             await authStateProvider.Login(loginParameters);
@@ -49,5 +49,24 @@
         {
             error = ex.Message;
         }
+    }
+
+    async Task SubmitLogin()
+    {
+        error = string.Empty;
+        try
+        {
+            await authStateProvider.Login(loginParameters);
+            navigationManager.NavigateTo("");
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+        }
+    }
+
+    void Register()
+    {
+        navigationManager.NavigateTo("/register");
     }
 }

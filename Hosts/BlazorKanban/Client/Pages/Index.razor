@@ -7,41 +7,12 @@ Welcome to your new app.
 
 <div class="container-fluid pt-3">
     <div class="card-body">
-        <a href="boards">
+        <a href="board/5f2c15d77a65952d71665819">
             <span class="oi oi-list-rich" aria-hidden="true"></span> &nbsp; Boards
         </a>
     </div>
 </div>
 
-<button class="btn btn-primary" @onclick="@ModalOpen">Show Dialog!</button>
-
-@if (showModal)
-{
-    <div class="modal fade @ModalClass" tabindex="-1" role="dialog" style="display:@ModalDisplay" aria-modal="true" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <h5 class="modal-title">Modal title</h5>
-                    <button type="button" class="close" aria-label="Close" @onclick="@ModalClose">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <div class="modal-body">
-                    <p>Modal body text goes here.</p>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" @onclick="ModalOk">Save changes</button>
-                    <button type="button" class="btn btn-secondary" @onclick="@ModalClose">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-backdrop fade show"></div>
-}
 
 @code {
 

@@ -1,4 +1,4 @@
-﻿@page "/board/{id}"
+﻿@page "/board/{BoardId}"
 @attribute [Authorize]
 @inject HttpClient Http
 @using BlazorKanban.Client.Pages.Columns
@@ -6,7 +6,7 @@
 
 @if (board == null)
 {
-    <MatProgressBar Indeterminate="true"></MatProgressBar>
+    <Loading></Loading>
 }
 else
 {
@@ -42,9 +42,14 @@ else
 @code {
     private Board board;
 
+    [Parameter]
+    public string BoardId { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
-        board = await Http.GetFromJsonAsync<Board>("api/taskboards/5f2c15d77a65952d71665819");
+        board = await Http.GetFromJsonAsync<Board>($"api/taskboards/{BoardId}");
+
+        //board = await Http.GetFromJsonAsync<Board>("api/taskboards/5f2c15d77a65952d71665819");
     }
 
     private void AddColumn()

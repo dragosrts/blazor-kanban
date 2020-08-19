@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@attribute [Authorize]
 @inject NavigationManager navigationManager
 
 <MatAppBarContainer>
@@ -8,8 +9,7 @@
                 <MatAppBarTitle>&nbsp; Blazor Kanban</MatAppBarTitle>
             </MatAppBarSection>
             <MatAppBarSection Align="@MatAppBarSectionAlign.End">
-                <MatIconButton Icon="@MatIconNames.Home" Link="@navigationManager.BaseUri"></MatIconButton>
-                <MatIconButton Icon="@MatIconNames.Account_circle"></MatIconButton>
+                <BlazorKanban.Client.Pages.Users.UserInfoPanel> </BlazorKanban.Client.Pages.Users.UserInfoPanel>
             </MatAppBarSection>
         </MatAppBarRow>
     </MatAppBar>
@@ -19,3 +19,4 @@
         </section>
     </MatAppBarContent>
 </MatAppBarContainer>
+

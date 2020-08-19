@@ -2,7 +2,7 @@
 
 namespace BlazorKanban.Shared
 {
-    public class UserInfo
+    public class UserInfoParameters
     {
         public bool IsAuthenticated { get; set; }
 

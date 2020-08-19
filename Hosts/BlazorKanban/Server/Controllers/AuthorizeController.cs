@@ -58,15 +58,15 @@ namespace BlazorKanban.Server.Controllers
         }
 
         [HttpGet]
-        public UserInfo UserInfo()
+        public UserInfoParameters UserInfo()
         {
             //var user = await _userManager.GetUserAsync(HttpContext.User);
             return BuildUserInfo();
         }
 
-        private UserInfo BuildUserInfo()
+        private UserInfoParameters BuildUserInfo()
         {
-            var userInfo = new UserInfo
+            var userInfo = new UserInfoParameters
             {
                 IsAuthenticated = User.Identity.IsAuthenticated,
                 UserName = User.Identity.Name,

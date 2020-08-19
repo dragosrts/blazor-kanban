@@ -11,6 +11,6 @@ namespace BlazorKanban.Client.Services.Contracts
 
         Task Logout();
 
-        Task<UserInfo> GetUserInfo();
+        Task<UserInfoParameters> GetUserInfo();
     }
 }

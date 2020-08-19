@@ -11,7 +11,7 @@ namespace BlazorKanban.Client.Services
 {
     public class IdentityAuthenticationStateProvider : AuthenticationStateProvider
     {
-        private UserInfo? _userInfoCache;
+        private UserInfoParameters? _userInfoCache;
         private readonly IAuthorizeApi _authorizeApi;
 
         public IdentityAuthenticationStateProvider(IAuthorizeApi authorizeApi)
@@ -38,7 +38,7 @@ namespace BlazorKanban.Client.Services
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
 
-        private async Task<UserInfo> GetUserInfo()
+        public async Task<UserInfoParameters> GetUserInfo()
         {
             if (_userInfoCache != null && _userInfoCache.IsAuthenticated) return _userInfoCache;
             _userInfoCache = await _authorizeApi.GetUserInfo();

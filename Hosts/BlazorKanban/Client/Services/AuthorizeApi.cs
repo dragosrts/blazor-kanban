@@ -38,9 +38,9 @@ namespace BlazorKanban.Client.Services
             result.EnsureSuccessStatusCode();
         }
 
-        public async Task<UserInfo> GetUserInfo()
+        public async Task<UserInfoParameters> GetUserInfo()
         {
-            var result = await _httpClient.GetFromJsonAsync<UserInfo>("api/Authorize/UserInfo");
+            var result = await _httpClient.GetFromJsonAsync<UserInfoParameters>("api/Authorize/UserInfo");
             return result;
         }
     }
