@@ -2,7 +2,8 @@
 using BlazorKanban.Application.TaskBoards.Commands.CreateTaskBoard;
 using BlazorKanban.Application.TaskBoards.Commands.DeleteTaskBoard;
 using BlazorKanban.Application.TaskBoards.Commands.UpdateTaskBoard;
-using BlazorKanban.Application.TaskBoards.Queries.GetTaskBoard;
+using BlazorKanban.Application.TaskBoards.Queries.GetAllTaskBoardsByUserId;
+using BlazorKanban.Application.TaskBoards.Queries.GetTaskBoardDetailsById;
 using BlazorKanban.Domain.Objects.Entities;
 using BlazorKanban.Shared;
 using MediatR;
@@ -31,23 +32,24 @@ namespace BlazorKanban.Server.Controllers
             this.mapper = mapper;
         }
 
-        [HttpGet]
-        public async Task<IEnumerable<Board>> GetTaskBoards()
+        [HttpGet("{userid}/boards")]
+        public async Task<IEnumerable<Board>> GetTaskBoards(string userid)
         {
-            var list =
-                new List<Board>();
+            var result = await mediator.Send(new GetAllTaskBoardsByUserIdQuery(userId: userid));
 
-            return list;
+            var response = mapper.Map<IEnumerable<Board>>(result);
+
+            return response;
         }
 
         [HttpGet("{id}")]
         public async Task<Board> GetTaskBoard(string id)
         {
-            var vm = await mediator.Send(new GetTaskBoardDetailQuery(id: id));
+            var result = await mediator.Send(new GetTaskBoardDetailsByIdQuery(id: id));
 
-            var result = mapper.Map<Board>(vm);
+            var response = mapper.Map<Board>(result);
 
-            return result;
+            return response;
         }
 
         [HttpPost]
@@ -55,6 +57,7 @@ namespace BlazorKanban.Server.Controllers
         {
             var result = await mediator.Send(
                 new CreateTaskBoardCommand(
+                    userId: board.UserId,
                     title: board.Title,
                     description: board.Description
                 ));
@@ -70,6 +73,7 @@ namespace BlazorKanban.Server.Controllers
             var result = await mediator.Send(
                 new UpdateTaskBoardCommand(
                     id: request.Id,
+                    userId: request.UserId,
                     title: request.Title,
                     description: request.Description,
                     lists: request.Lists

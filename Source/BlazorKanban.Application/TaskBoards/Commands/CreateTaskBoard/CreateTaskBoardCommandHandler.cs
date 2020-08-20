@@ -26,6 +26,7 @@ namespace BlazorKanban.Application.TaskBoards.Commands.CreateTaskBoard
             var entity =
                 new TaskBoard(
                     id: newId,
+                    userId: request.UserId,
                     title: request.Title,
                     description: request.Description,
                     lists: new List<TaskList>()

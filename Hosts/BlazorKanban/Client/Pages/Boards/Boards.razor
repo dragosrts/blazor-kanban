@@ -1,0 +1,63 @@
+﻿@page "/{UserId}/boards/"
+@attribute [Authorize]
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+@if (boards == null)
+{
+    <Loading />
+}
+else
+{
+    <div class="mat-layout-grid">
+        <div class="mat-layout-grid-inner">
+            @foreach (var board in boards)
+            {
+                <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
+                    <MatCard Id="@board.Id" Class="board-block">
+                        <MatCardContent Class="p-3" @onclick="() => GoToBoard(board.Id)">
+                            <MatHeadline6>
+                                @board.Title
+                            </MatHeadline6>
+                            <MatBody2>
+                                @board.Description
+                            </MatBody2>
+                        </MatCardContent>
+                        <MatCardActions>
+                            <MatCardActionButtons>
+                                <MatButton Icon="@MatIconNames.Edit">Edit</MatButton>
+                            </MatCardActionButtons>
+                        </MatCardActions>
+                    </MatCard>
+                </div>
+            }
+            <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
+                <MatButton Icon="@MatIconNames.Add" Class="board-block" OnClick="AddBoard">&nbsp; Add Board</MatButton>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private Board[] boards;
+
+    [Parameter]
+    public string UserId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        boards = await Http.GetFromJsonAsync<Board[]>($"api/taskboards/{UserId}/boards");
+
+        //board = await Http.GetFromJsonAsync<Board>("api/taskboards/5f2c15d77a65952d71665819");
+    }
+
+    private void GoToBoard(string id)
+    {
+        NavigationManager.NavigateTo($"board/{id}");
+    }
+
+    private void AddBoard()
+    {
+        // Update the card with the new column id
+    }
+}

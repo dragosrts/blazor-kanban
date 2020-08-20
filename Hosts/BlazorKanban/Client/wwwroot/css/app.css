@@ -204,6 +204,17 @@ app {
         cursor: pointer;
     }
 
+.board-block {
+    background-color: rgba(0, 0, 0, 0);
+    margin: 15px;
+    border-radius: 0px;
+    box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.5);
+}
+
+    .board-block:hover {
+        cursor: pointer;
+    }
+
 .item-dropzone {
     min-height: 40px;
     margin-bottom: 1rem;

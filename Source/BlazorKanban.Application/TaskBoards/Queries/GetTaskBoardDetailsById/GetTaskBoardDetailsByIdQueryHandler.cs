@@ -8,22 +8,22 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BlazorKanban.Application.TaskBoards.Queries.GetTaskBoard
+namespace BlazorKanban.Application.TaskBoards.Queries.GetTaskBoardDetailsById
 {
-    public class GetTaskBoardDetailQueryHandler : IRequestHandler<GetTaskBoardDetailQuery, TaskBoard>
+    public class GetTaskBoardDetailsByIdQueryHandler : IRequestHandler<GetTaskBoardDetailsByIdQuery, TaskBoard>
     {
         private readonly IGetTaskBoardEntity<TaskBoard> taskBoardGetter;
         private readonly IGetTaskListEntity<TaskList> taskListGetter;
         private readonly IGetTaskCardEntity<TaskCard> taskCardGetter;
 
-        public GetTaskBoardDetailQueryHandler(IGetTaskBoardEntity<TaskBoard> taskBoardGetter, IGetTaskListEntity<TaskList> taskListGetter, IGetTaskCardEntity<TaskCard> taskCardGetter)
+        public GetTaskBoardDetailsByIdQueryHandler(IGetTaskBoardEntity<TaskBoard> taskBoardGetter, IGetTaskListEntity<TaskList> taskListGetter, IGetTaskCardEntity<TaskCard> taskCardGetter)
         {
             this.taskBoardGetter = taskBoardGetter ?? throw new ArgumentNullException(nameof(taskBoardGetter));
             this.taskListGetter = taskListGetter ?? throw new ArgumentNullException(nameof(taskListGetter));
             this.taskCardGetter = taskCardGetter ?? throw new ArgumentNullException(nameof(taskCardGetter));
         }
 
-        public async Task<TaskBoard> Handle(GetTaskBoardDetailQuery request, CancellationToken cancellationToken)
+        public async Task<TaskBoard> Handle(GetTaskBoardDetailsByIdQuery request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -57,6 +57,7 @@ namespace BlazorKanban.Application.TaskBoards.Queries.GetTaskBoard
             var taskBoard =
                 new TaskBoard(
                     id: boardResult.Id,
+                    userId: boardResult.UserId,
                     title: boardResult.Title,
                     description: boardResult.Description,
                     lists: taskLists

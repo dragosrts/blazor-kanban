@@ -23,6 +23,7 @@ namespace BlazorKanban.Application.TaskBoards.Commands.UpdateTaskBoard
             var entity =
                 new TaskBoard(
                     id: request.Id,
+                    userId: request.UserId,
                     title: request.Title,
                     description: request.Description,
                     lists: request.Lists

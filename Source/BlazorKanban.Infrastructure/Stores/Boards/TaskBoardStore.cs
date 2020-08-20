@@ -5,6 +5,7 @@ using BlazorKanban.Infrastructure.Common;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -88,9 +89,15 @@ namespace BlazorKanban.Infrastructure.Stores.Boards
             return domainBoard;
         }
 
-        public Task<TBoard> GetAllBoardsAsync(CancellationToken cancellationToken)
+        public async Task<IEnumerable<TBoard>> GetAllBoardsByUserIdAsync(string UserId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(UserId)) throw new ArgumentNullException(nameof(UserId));
+
+            var mongoBoards = await _boardsCollection.WhereAsync(x => x.UserId == ObjectId.Parse(UserId), cancellationToken: cancellationToken).ConfigureAwait(true);
+
+            var domainBoards = mapper.Map<IEnumerable<TMongoCollection>, IEnumerable<TBoard>>(mongoBoards);
+
+            return domainBoards;
         }
     }
 }

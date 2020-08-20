@@ -2,7 +2,7 @@
 
 @if (Card == null)
 {
-    <Loading></Loading>
+    <Loading />
 }
 else
 {
@@ -11,17 +11,15 @@ else
             <MatHeadline6>
                 @Card.Title
             </MatHeadline6>
-
             <MatBody2>
                 @Card.Description
             </MatBody2>
-
-            <MatCardActions>
-                <MatCardActionButtons>
-                    <MatButton Icon="@MatIconNames.Edit">Edit</MatButton>
-                </MatCardActionButtons>
-            </MatCardActions>
         </MatCardContent>
+        <MatCardActions>
+            <MatCardActionButtons>
+                <MatButton Icon="@MatIconNames.Edit">Edit</MatButton>
+            </MatCardActionButtons>
+        </MatCardActions>
     </MatCard>
 }
 

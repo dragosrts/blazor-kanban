@@ -4,11 +4,10 @@
 
 @if (Column == null)
 {
-    <Loading></Loading>
+    <Loading />
 }
 else
 {
-
     <MatCard Id="@Column.Id" Class="@Class">
         <MatCardContent>
             <MatAccordion>
@@ -24,25 +23,19 @@ else
                         <MatSubtitle2>
                             @Column.Description
                         </MatSubtitle2>
-                        <MatCardActions>
-                            <MatCardActionButtons>
-                                <MatButton Icon="@MatIconNames.Edit">Edit</MatButton>
-                            </MatCardActionButtons>
-                        </MatCardActions>
+                        <MatButton Icon="@MatIconNames.Edit">Edit</MatButton>
                     </MatExpansionPanelDetails>
                 </MatExpansionPanel>
             </MatAccordion>
-
             <MatBody2>
                 <Dropzone Id="@Column.Id" Class="m-3 item-dropzone" Style="DragDropStyle.Custom" Items="Column.Cards" TItem="Card" OnItemDrop="UpdateCard" InstantReplace="true">
                     <CardContainer Card="@context" />
                 </Dropzone>
             </MatBody2>
         </MatCardContent>
-
         <MatCardActions>
             <MatCardActionButtons>
-                <MatButton @onclick="ShowModal">Add Card</MatButton>
+                <MatButton @onclick="ShowModal">&nbsp; Add Card</MatButton>
             </MatCardActionButtons>
         </MatCardActions>
     </MatCard>

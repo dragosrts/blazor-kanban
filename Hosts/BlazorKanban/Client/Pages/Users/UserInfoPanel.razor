@@ -12,7 +12,7 @@
     <Authorized>
         <div class="mat-elevation-z24 m-2">
             <MatTooltip Tooltip="@HOME_TOOLTIP">
-                <MatButton Link="@navigationManager.BaseUri" Label="@HOME_LABEL" RefBack="@context" Icon="home" Raised="true"></MatButton>
+                <MatButton Link="@navigationManager.BaseUri" Label="@HOME_LABEL" RefBack="@context" Icon="dashboard" Raised="true"></MatButton>
             </MatTooltip>
         </div>
         <div class="mat-elevation-z24 m-2">
@@ -46,10 +46,10 @@
     private string? HOME_TOOLTIP;
     private string? HOME_LABEL;
 
-    UserInfoParameters? userInfo;
+    private UserInfoParameters? userInfo;
 
-    BaseMatButton UserInfoButton;
-    BaseMatMenu UserInfoMenu;
+    private BaseMatButton UserInfoButton;
+    private BaseMatMenu UserInfoMenu;
 
     protected override async Task OnInitializedAsync()
     {
@@ -62,12 +62,12 @@
         LOGOUT_LABEL = $"Logout as {userInfo.UserName}";
 
         HOME_TOOLTIP = $"Go to the home screen";
-        HOME_LABEL = $"Boards";
+        HOME_LABEL = $"dashboard";
     }
 
     async Task UserInfoClick()
     {
-        this.UserInfoMenu.OpenAsync(UserInfoButton.Ref);
+        await this.UserInfoMenu.OpenAsync(UserInfoButton.Ref);
     }
 
     async Task LogoutClick()

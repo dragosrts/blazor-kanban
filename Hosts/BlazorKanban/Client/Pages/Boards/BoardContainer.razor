@@ -3,16 +3,12 @@
 @inject HttpClient Http
 @using BlazorKanban.Client.Pages.Columns
 
-
 @if (board == null)
 {
-    <Loading></Loading>
+    <Loading />
 }
 else
 {
-    @*@foreach (var board in board)
-        {*@
-
     <div class="mx-5 my-3">
         <div class="mat-elevation-z24">
             <div class="px-5 py-3">
@@ -31,12 +27,10 @@ else
                 </div>
             }
             <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">
-                <MatButton Outlined="true" Dense="true" Icon="@MatIconNames.View_column" Class="column-block item-boundaries" OnClick="AddColumn">Add Column</MatButton>
+                <MatButton Outlined="true" Dense="true" Icon="@MatIconNames.View_column" Class="column-block item-boundaries" OnClick="AddColumn">&nbsp; Add Column</MatButton>
             </div>
         </div>
     </div>
-
-    @*}*@
 }
 
 @code {
