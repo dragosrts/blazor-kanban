@@ -54,7 +54,9 @@
 
     private async Task HandleValidSubmit()
     {
-        var result = await Http.PostAsJsonAsync<BlazorKanban.Shared.Card>($"api/taskcards", cardModel);
+        await Http.PostAsJsonAsync<BlazorKanban.Shared.Card>($"api/taskcards", cardModel);
+
+        var result = Http.GetFromJsonAsync<BlazorKanban.Shared.Card[]>($"api/taskcards/{cardModel}/boards");
 
         await BlazoredModal.Close(ModalResult.Ok<BlazorKanban.Shared.Card>(cardModel));
 

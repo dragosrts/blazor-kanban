@@ -23,7 +23,11 @@ else
             @foreach (var column in board.Columns)
             {
                 <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">
-                    <ColumnContainer Column="column" Class="column-block item-boundaries" />
+                    <CascadingValue Value="column">
+                        <ColumnContainer Class="column-block item-boundaries" />
+                    </CascadingValue>
+
+                    @*<ColumnContainer Column="column" Class="column-block item-boundaries" />*@
                 </div>
             }
             <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">

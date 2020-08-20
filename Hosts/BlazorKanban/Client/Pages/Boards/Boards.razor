@@ -10,11 +10,11 @@
 else
 {
     <div class="mat-layout-grid">
-        <div class="mat-layout-grid-inner">
+        <div class="mat-layout-grid-inner row flex-row flex-sm">
             @foreach (var board in boards)
             {
                 <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
-                    <MatCard Id="@board.Id" Class="board-block">
+                    <MatCard Id="@board.Id" Class="board-block item-boundaries">
                         <MatCardContent Class="p-3" @onclick="() => GoToBoard(board.Id)">
                             <MatHeadline6>
                                 @board.Title
@@ -32,8 +32,33 @@ else
                 </div>
             }
             <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
-                <MatButton Icon="@MatIconNames.Add" Class="board-block" OnClick="AddBoard">&nbsp; Add Board</MatButton>
+                <MatButton Icon="@MatIconNames.Add" Class="board-block item-boundaries" OnClick="AddBoard">&nbsp; Add Board</MatButton>
             </div>
+
+            @*<AddBoard IsOpen="IsAddBoardOpened"></AddBoard>*@
+
+            <MatDialog @bind-IsOpen="@IsAddBoardOpened">
+                <EditForm Model="@boardModel" OnValidSubmit="SubmitForm">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <MatDialogTitle>Add new board</MatDialogTitle>
+                    <MatDivider></MatDivider>
+                    <MatDialogContent>
+                        <p>
+                            <label for="board-title">Board Title</label>
+                            <MatTextField Id="board-title" @bind-Value="@boardModel.Title" FullWidth="true"></MatTextField>
+                        </p>
+                        <p>
+                            <label for="board-description">Board Description</label>
+                            <MatTextField Id="board-description" @bind-Value="@boardModel.Description" FullWidth="true" TextArea="true"></MatTextField>
+                        </p>
+                    </MatDialogContent>
+                    <MatDialogActions>
+                        <MatButton Type="submit">Save</MatButton>
+                        <MatButton OnClick="Cancel">Cancel</MatButton>
+                    </MatDialogActions>
+                </EditForm>
+            </MatDialog>
         </div>
     </div>
 }
@@ -41,14 +66,23 @@ else
 @code {
     private Board[] boards;
 
+    private bool IsAddBoardOpened = false;
+
     [Parameter]
     public string UserId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        boards = await Http.GetFromJsonAsync<Board[]>($"api/taskboards/{UserId}/boards");
+        await GetBoards();
 
         //board = await Http.GetFromJsonAsync<Board>("api/taskboards/5f2c15d77a65952d71665819");
+    }
+
+    private async Task GetBoards()
+    {
+        boardModel = new BlazorKanban.Shared.Board();
+
+        boards = await Http.GetFromJsonAsync<Board[]>($"api/taskboards/{UserId}/boards");
     }
 
     private void GoToBoard(string id)
@@ -58,6 +92,28 @@ else
 
     private void AddBoard()
     {
+        IsAddBoardOpened = true;
+
         // Update the card with the new column id
+    }
+
+    private BlazorKanban.Shared.Board boardModel;
+
+    private async Task SubmitForm()
+    {
+        IsAddBoardOpened = false;
+
+        boardModel.UserId = UserId;
+
+        var result = await Http.PostAsJsonAsync<BlazorKanban.Shared.Board>($"api/taskboards", boardModel);
+        
+        await GetBoards();
+
+        this.StateHasChanged();
+    }
+
+    void Cancel()
+    {
+        IsAddBoardOpened = false;
     }
 }

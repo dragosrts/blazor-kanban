@@ -29,7 +29,10 @@ else
             </MatAccordion>
             <MatBody2>
                 <Dropzone Id="@Column.Id" Class="m-3 item-dropzone" Style="DragDropStyle.Custom" Items="Column.Cards" TItem="Card" OnItemDrop="UpdateCard" InstantReplace="true">
-                    <CardContainer Card="@context" />
+                    <CascadingValue Value="@context">
+                        <CardContainer />
+                    </CascadingValue>
+                    @*<CardContainer Card="@context" />*@
                 </Dropzone>
             </MatBody2>
         </MatCardContent>
@@ -46,9 +49,9 @@ else
 
     [CascadingParameter] public IModalService Modal { get; set; }
 
-    [Parameter] public string Class { get; set; }
+    [CascadingParameter] public Column Column { get; set; }
 
-    [Parameter] public Column Column { get; set; }
+    [Parameter] public string Class { get; set; }
 
     private void ShowModal()
     {
@@ -56,7 +59,7 @@ else
         parameters.Add(nameof(Card.ColumnId), Column.Id);
 
         Modal.Show<CardEdit>($"Create a new Card on {Column.Title}", parameters);
-
+        
         this.StateHasChanged();
     }
 

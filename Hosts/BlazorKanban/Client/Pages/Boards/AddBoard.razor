@@ -1,0 +1,77 @@
+﻿@page "/board/create";
+@attribute [Authorize]
+@inject HttpClient Http
+
+<EditForm Model="@boardModel" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <!--<div class="form-group">-->
+    @*<label for="card-title">Card Title</label>
+        <input @bind="@cardModel.Title" type="text" class="form-control" id="card-title" />*@
+    <!--<p>
+            <MatTextField Id="card-title" @bind-Value="@cardModel.Title" Label="Card Title" FullWidth="true"></MatTextField>
+        </p>
+    </div>
+
+    <div class="form-group">-->
+    @*<label for="card-description">Card Description</label>
+        <input @bind="@cardModel.Description" type="text" class="form-control" id="card-description" />*@
+    <!--<p>
+            <MatTextField Id="card-description" @bind-Value="@cardModel.Description" Label="Card Description" TextArea="true" FullWidth="true"></MatTextField>
+        </p>
+    </div>
+
+    <MatButton Type="submit" Icon="@MatIconNames.Check">Submit</MatButton>
+    <MatButton OnClick="Cancel" Icon="@MatIconNames.Cancel">Cancel</MatButton>-->
+
+
+    <MatDialog @bind-IsOpen="@IsOpen">
+        <MatDialogTitle>Add new board</MatDialogTitle>
+        <MatDialogContent>
+            <p>Board Title</p>
+            <MatTextField Id="board-title" @bind-Value="@boardModel.Title" FullWidth="true"></MatTextField>
+            <p>Board Description</p>
+            <MatTextField Id="board-title" @bind-Value="@boardModel.Description" FullWidth="true" TextArea="true"></MatTextField>
+        </MatDialogContent>
+        <MatDialogActions>
+            <MatButton OnClick="SubmitForm">No Thanks</MatButton>
+            <MatButton OnClick="Cancel">OK</MatButton>
+        </MatDialogActions>
+    </MatDialog>
+</EditForm>
+
+@code  {
+
+    [Parameter] public bool IsOpen { get; set; } = false;
+
+    [Parameter] public string ColumnId { get; set; }
+
+    private BlazorKanban.Shared.Board boardModel;
+
+    protected override void OnInitialized()
+    {
+        boardModel = new BlazorKanban.Shared.Board();
+
+        boardModel.Id = ColumnId;
+    }
+
+    void SubmitForm()
+    {
+        IsOpen = false;
+    }
+
+    void Cancel()
+    {
+        IsOpen = false;
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        //var result = await Http.PostAsJsonAsync<BlazorKanban.Shared.Card>($"api/taskcards", cardModel);
+
+        IsOpen = false;
+
+        this.StateHasChanged();
+    }
+}
