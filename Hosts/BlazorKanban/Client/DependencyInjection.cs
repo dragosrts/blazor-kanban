@@ -1,5 +1,4 @@
-﻿using Blazored.Modal;
-using BlazorKanban.Client.Services;
+﻿using BlazorKanban.Client.Services;
 using BlazorKanban.Client.Services.Contracts;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +10,6 @@ namespace BlazorKanban.Client
     {
         public static IServiceCollection AddBlazorKanbanClient(this IServiceCollection services)
         {
-            services.AddBlazoredModal();
             services.AddBlazorDragDrop();
 
             services.AddOptions();

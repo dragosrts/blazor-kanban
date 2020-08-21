@@ -1,5 +1,5 @@
-﻿@page "/{UserId}/boards/"
-@attribute [Authorize]
+﻿@attribute [Authorize]
+@page "/{UserId}/boards/"
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 
@@ -25,63 +25,33 @@ else
                         </MatCardContent>
                         <MatCardActions>
                             <MatCardActionButtons>
-                                <MatButton Icon="@MatIconNames.Edit">Edit</MatButton>
+                                <MatButton Icon="@MatIconNames.Edit" OnClick="async () => await BoardEditModal.Open(board.Id)">Edit</MatButton>
                             </MatCardActionButtons>
                         </MatCardActions>
                     </MatCard>
                 </div>
             }
             <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
-                <MatButton Icon="@MatIconNames.Add" Class="board-block item-boundaries" OnClick="AddBoard">&nbsp; Add Board</MatButton>
+                <MatButton Icon="@MatIconNames.Add" Class="board-block item-boundaries" OnClick="() => BoardCreateModal.Open()">&nbsp; Add Board</MatButton>
             </div>
 
-            @*<AddBoard IsOpen="IsAddBoardOpened"></AddBoard>*@
+            <BoardCreate @ref="BoardCreateModal" UserId="@UserId" OnSubmitCallback="Reload"></BoardCreate>
 
-            <MatDialog @bind-IsOpen="@IsAddBoardOpened">
-                <EditForm Model="@boardModel" OnValidSubmit="SubmitForm">
-                    <DataAnnotationsValidator />
-                    <ValidationSummary />
-                    <MatDialogTitle>Add new board</MatDialogTitle>
-                    <MatDivider></MatDivider>
-                    <MatDialogContent>
-                        <p>
-                            <label for="board-title">Board Title</label>
-                            <MatTextField Id="board-title" @bind-Value="@boardModel.Title" FullWidth="true"></MatTextField>
-                        </p>
-                        <p>
-                            <label for="board-description">Board Description</label>
-                            <MatTextField Id="board-description" @bind-Value="@boardModel.Description" FullWidth="true" TextArea="true"></MatTextField>
-                        </p>
-                    </MatDialogContent>
-                    <MatDialogActions>
-                        <MatButton Type="submit">Save</MatButton>
-                        <MatButton OnClick="Cancel">Cancel</MatButton>
-                    </MatDialogActions>
-                </EditForm>
-            </MatDialog>
+            <BoardEdit @ref="BoardEditModal" OnSubmitCallback="Reload"></BoardEdit>
         </div>
     </div>
 }
 
 @code {
+    [Parameter] public string UserId { get; set; }
+
     private Board[] boards;
 
-    private bool IsAddBoardOpened = false;
-
-    [Parameter]
-    public string UserId { get; set; }
+    private BoardCreate BoardCreateModal;
+    private BoardEdit BoardEditModal;
 
     protected override async Task OnInitializedAsync()
     {
-        await GetBoards();
-
-        //board = await Http.GetFromJsonAsync<Board>("api/taskboards/5f2c15d77a65952d71665819");
-    }
-
-    private async Task GetBoards()
-    {
-        boardModel = new BlazorKanban.Shared.Board();
-
         boards = await Http.GetFromJsonAsync<Board[]>($"api/taskboards/{UserId}/boards");
     }
 
@@ -90,30 +60,10 @@ else
         NavigationManager.NavigateTo($"board/{id}");
     }
 
-    private void AddBoard()
+    private async Task Reload()
     {
-        IsAddBoardOpened = true;
+        boards = await Http.GetFromJsonAsync<Board[]>($"api/taskboards/{UserId}/boards");
 
-        // Update the card with the new column id
-    }
-
-    private BlazorKanban.Shared.Board boardModel;
-
-    private async Task SubmitForm()
-    {
-        IsAddBoardOpened = false;
-
-        boardModel.UserId = UserId;
-
-        var result = await Http.PostAsJsonAsync<BlazorKanban.Shared.Board>($"api/taskboards", boardModel);
-        
-        await GetBoards();
-
-        this.StateHasChanged();
-    }
-
-    void Cancel()
-    {
-        IsAddBoardOpened = false;
+        StateHasChanged();
     }
 }

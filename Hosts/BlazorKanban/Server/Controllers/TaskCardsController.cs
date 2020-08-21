@@ -2,12 +2,14 @@
 using BlazorKanban.Application.TaskCards.Commands.CreateTaskCard;
 using BlazorKanban.Application.TaskCards.Commands.DeleteTaskCard;
 using BlazorKanban.Application.TaskCards.Commands.UpdateTaskCard;
+using BlazorKanban.Application.TaskCards.Queries.GetAllTaskCardsByListId;
 using BlazorKanban.Domain.Objects.Entities;
 using BlazorKanban.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BlazorKanban.Server.Controllers
@@ -26,6 +28,16 @@ namespace BlazorKanban.Server.Controllers
             this.logger = logger;
             this.mediator = mediator;
             this.mapper = mapper;
+        }
+
+        [HttpGet("{columnid}/cards")]
+        public async Task<IEnumerable<Card>> GetTaskBoards(string columnid)
+        {
+            var result = await mediator.Send(new GetAllTaskCardsByListIdQuery(listId: columnid));
+
+            var response = mapper.Map<IEnumerable<Card>>(result);
+
+            return response;
         }
 
         [HttpPost]

@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="TaskCards\Queries\" />
     <Folder Include="Common\" />
     <Folder Include="TaskLists\Queries\" />
   </ItemGroup>

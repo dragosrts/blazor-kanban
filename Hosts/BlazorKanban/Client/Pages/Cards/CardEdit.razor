@@ -1,5 +1,5 @@
-﻿@page "/card/create";
-@attribute [Authorize]
+﻿@attribute [Authorize]
+@page "/card/create";
 @inject HttpClient Http
 
 <EditForm Model="@cardModel" OnValidSubmit="HandleValidSubmit">
@@ -24,11 +24,10 @@
 
     <MatButton Type="submit" Icon="@MatIconNames.Check">Submit</MatButton>
     <MatButton OnClick="Cancel" Icon="@MatIconNames.Cancel">Cancel</MatButton>
-
 </EditForm>
 
 @code  {
-    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+    //[CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
 
     [Parameter] public string ColumnId { get; set; }
 
@@ -44,21 +43,21 @@
 
     void SubmitForm()
     {
-        BlazoredModal.Close(ModalResult.Ok($"Form was submitted successfully."));
+        //BlazoredModal.Close(ModalResult.Ok($"Form was submitted successfully."));
     }
 
     void Cancel()
     {
-        BlazoredModal.Cancel();
+        //BlazoredModal.Cancel();
     }
 
     private async Task HandleValidSubmit()
     {
         await Http.PostAsJsonAsync<BlazorKanban.Shared.Card>($"api/taskcards", cardModel);
 
-        var result = Http.GetFromJsonAsync<BlazorKanban.Shared.Card[]>($"api/taskcards/{cardModel}/boards");
+        var result = await Http.GetFromJsonAsync<BlazorKanban.Shared.Card[]>($"api/taskcards/{ColumnId}/cards");
 
-        await BlazoredModal.Close(ModalResult.Ok<BlazorKanban.Shared.Card>(cardModel));
+        //await BlazoredModal.Close(ModalResult.Ok<BlazorKanban.Shared.Card[]>(result));
 
         this.StateHasChanged();
     }

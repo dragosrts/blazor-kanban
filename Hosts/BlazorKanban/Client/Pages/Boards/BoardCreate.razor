@@ -1,0 +1,72 @@
+﻿@attribute [Authorize]
+@page "/board/create";
+@inject HttpClient Http
+
+<MatDialog @bind-IsOpen="@IsOpen">
+    <EditForm Model="@boardModel" OnValidSubmit="SubmitForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <MatDialogTitle>Add new board</MatDialogTitle>
+        <MatDivider></MatDivider>
+        <MatDialogContent>
+            <p>
+                <label for="board-title">Board Title</label>
+                <MatTextField Id="board-title" @bind-Value="@boardModel.Title" FullWidth="true"></MatTextField>
+            </p>
+            <p>
+                <label for="board-description">Board Description</label>
+                <MatTextField Id="board-description" @bind-Value="@boardModel.Description" FullWidth="true" TextArea="true"></MatTextField>
+            </p>
+        </MatDialogContent>
+        <MatDialogActions>
+            <MatButton Type="submit">Save</MatButton>
+            <MatButton Type="button" OnClick="Close">Cancel</MatButton>
+        </MatDialogActions>
+    </EditForm>
+</MatDialog>
+
+@code  {
+    [Parameter] public string UserId { get; set; }
+
+    [Parameter] public EventCallback OnSubmitCallback { get; set; }
+
+    private BlazorKanban.Shared.Board boardModel;
+
+    private bool IsOpen { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        boardModel = new BlazorKanban.Shared.Board();
+
+        boardModel.UserId = UserId;
+    }
+
+    public void Open()
+    {
+        IsOpen = true;
+
+        boardModel = new BlazorKanban.Shared.Board();
+
+        StateHasChanged();
+    }
+
+    void Close()
+    {
+        IsOpen = false;
+
+        boardModel = new BlazorKanban.Shared.Board();
+    }
+
+    private async Task SubmitForm()
+    {
+        boardModel.UserId = UserId;
+
+        await Http.PostAsJsonAsync<BlazorKanban.Shared.Board>($"api/taskboards", boardModel);
+
+        boardModel = new BlazorKanban.Shared.Board();
+
+        IsOpen = false;
+
+        await OnSubmitCallback.InvokeAsync(this);
+    }
+}

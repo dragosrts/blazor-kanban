@@ -1,12 +1,12 @@
-﻿@page "/"
-@attribute [Authorize]
+﻿@attribute [Authorize]
+@page "/"
 @inject IdentityAuthenticationStateProvider authStateProvider
 
 
 <div class="container-fluid">
     <div class="m-5">
         <div class="p-5">
-            <MatHeadline4 > <MatIcon Icon="person_outline"></MatIcon> @UserInfo.UserName - Personal Boards</MatHeadline4>
+            <MatHeadline4> <MatIcon Icon="person_outline"></MatIcon> @UserInfo.UserName - Personal Boards</MatHeadline4>
             <MatDivider></MatDivider>
             <MatSubtitle2></MatSubtitle2>
             <BlazorKanban.Client.Pages.Boards.Boards UserId="@UserInfo.Id"></BlazorKanban.Client.Pages.Boards.Boards>

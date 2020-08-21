@@ -1,0 +1,68 @@
+﻿@attribute [Authorize]
+@page "/board/edit/{boardid}";
+@inject HttpClient Http
+
+<MatDialog @bind-IsOpen="@IsOpen">
+    <EditForm Model="@BoardModel" OnValidSubmit="SubmitForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <MatDialogTitle>Edit board</MatDialogTitle>
+        <MatDivider></MatDivider>
+        <MatDialogContent>
+            <p>
+                <label for="board-title">Board Title</label>
+                <MatTextField Id="board-title" @bind-Value="@BoardModel.Title" FullWidth="true"></MatTextField>
+            </p>
+            <p>
+                <label for="board-description">Board Description</label>
+                <MatTextField Id="board-description" @bind-Value="@BoardModel.Description" FullWidth="true" TextArea="true"></MatTextField>
+            </p>
+        </MatDialogContent>
+        <MatDialogActions>
+            <MatButton Type="button" Icon="delete_forever" OnClick="async () => await Delete(BoardModel.Id)" Style="color:darkred; margin-right: auto;">Delete</MatButton>
+            <MatButton Type="submit">Save</MatButton>
+            <MatButton Type="button" OnClick="Close">Cancel</MatButton>
+        </MatDialogActions>
+    </EditForm>
+</MatDialog>
+
+@code  {
+    [Parameter] public EventCallback OnSubmitCallback { get; set; }
+
+    private BlazorKanban.Shared.Board BoardModel { get; set; } = new Board();
+
+    private bool IsOpen { get; set; } = false;
+
+    public async Task Open(string boardId)
+    {
+        IsOpen = true;
+        BoardModel = await Http.GetFromJsonAsync<Board>($"api/taskboards/{boardId}");
+
+        StateHasChanged();
+    }
+
+    private void Close()
+    {
+        IsOpen = false;
+
+        StateHasChanged();
+    }
+
+    private async Task Delete(string boardId)
+    {
+        IsOpen = false;
+
+        await Http.DeleteAsync($"api/taskboards/{boardId}");
+
+        await OnSubmitCallback.InvokeAsync(this);
+    }
+
+    private async Task SubmitForm()
+    {
+        await Http.PutAsJsonAsync<BlazorKanban.Shared.Board>($"api/taskboards/{BoardModel.Id}", BoardModel);
+
+        IsOpen = false;
+
+        await OnSubmitCallback.InvokeAsync(this);
+    }
+}
