@@ -4,17 +4,20 @@
 
 <MatDialog @bind-IsOpen="@IsOpen">
     <EditForm Model="@BoardModel" OnValidSubmit="SubmitForm">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
         <MatDialogTitle>Edit board</MatDialogTitle>
+        <p>
+            <DataAnnotationsValidator />
+            @*<ValidationSummary />*@
+        </p>
         <MatDivider></MatDivider>
         <MatDialogContent>
             <p>
                 <label for="board-title">Board Title</label>
                 <MatTextField Id="board-title" @bind-Value="@BoardModel.Title" FullWidth="true"></MatTextField>
+                <ValidationMessage For="@(() => BoardModel.Title)" />
             </p>
             <p>
-                <label for="board-description">Board Description</label>
+                <label for="board-description">Board Description (optional)</label>
                 <MatTextField Id="board-description" @bind-Value="@BoardModel.Description" FullWidth="true" TextArea="true"></MatTextField>
             </p>
         </MatDialogContent>

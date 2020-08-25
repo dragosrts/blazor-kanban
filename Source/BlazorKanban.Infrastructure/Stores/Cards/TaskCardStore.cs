@@ -38,10 +38,8 @@ namespace BlazorKanban.Infrastructure.Stores.Cards
             if (card == null) throw new ArgumentNullException(nameof(card));
 
             var mongoCard = mapper.Map<TCard, TMongoCollection>(card);
-
-            var foundCard = await _cardsCollection.FirstOrDefaultAsync(x => x.Title == mongoCard.Title, cancellationToken).ConfigureAwait(false);
-
-            if (foundCard == null) await _cardsCollection.InsertOneAsync(mongoCard, cancellationToken: cancellationToken).ConfigureAwait(false);
+            
+            await _cardsCollection.InsertOneAsync(mongoCard, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             return mongoCard.Id.ToString();
         }
@@ -99,6 +97,22 @@ namespace BlazorKanban.Infrastructure.Stores.Cards
             var mongoCardId = ObjectId.Parse(Id);
 
             var result = await _cardsCollection.DeleteOneAsync(x => x.Id == mongoCardId, cancellationToken).ConfigureAwait(false);
+
+            if (result.DeletedCount > 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<bool> DeleteAllByTaskListIdAsync(string taskListId, CancellationToken cancellationToken)
+        {
+            if (taskListId == null) throw new ArgumentNullException(nameof(taskListId));
+
+            var mongoTaskListId = ObjectId.Parse(taskListId);
+
+            var result = await _cardsCollection.DeleteManyAsync(x => x.ListId == mongoTaskListId, cancellationToken).ConfigureAwait(false);
 
             if (result.DeletedCount > 0)
             {

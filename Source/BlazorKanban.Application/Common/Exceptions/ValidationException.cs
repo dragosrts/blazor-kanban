@@ -1,7 +1,5 @@
-﻿using FluentValidation.Results;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace BlazorKanban.Application.Common.Exceptions
 {
@@ -13,23 +11,23 @@ namespace BlazorKanban.Application.Common.Exceptions
             Failures = new Dictionary<string, string[]>();
         }
 
-        public ValidationException(List<ValidationFailure> failures)
-            : this()
-        {
-            var propertyNames = failures
-                .Select(e => e.PropertyName)
-                .Distinct();
+        //public ValidationException(List<string> failures)
+        //    : this()
+        //{
+        //    var propertyNames = failures
+        //        .Select(e => e.PropertyName)
+        //        .Distinct();
 
-            foreach (var propertyName in propertyNames)
-            {
-                var propertyFailures = failures
-                    .Where(e => e.PropertyName == propertyName)
-                    .Select(e => e.ErrorMessage)
-                    .ToArray();
+        //    foreach (var propertyName in propertyNames)
+        //    {
+        //        var propertyFailures = failures
+        //            .Where(e => e.PropertyName == propertyName)
+        //            .Select(e => e.ErrorMessage)
+        //            .ToArray();
 
-                Failures.Add(propertyName, propertyFailures);
-            }
-        }
+        //        Failures.Add(propertyName, propertyFailures);
+        //    }
+        //}
 
         public IDictionary<string, string[]> Failures { get; }
     }

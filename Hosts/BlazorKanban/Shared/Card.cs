@@ -1,4 +1,6 @@
-﻿namespace BlazorKanban.Shared
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BlazorKanban.Shared
 {
     public class Card
     {
@@ -6,6 +8,7 @@
 
         public string ColumnId { get; set; }
 
+        [Required]
         public string Title { get; set; }
 
         public string Description { get; set; }

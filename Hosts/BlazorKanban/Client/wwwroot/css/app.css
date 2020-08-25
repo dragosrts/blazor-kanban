@@ -222,7 +222,8 @@ app {
 
 .item-boundaries {
     width: 375px;
-    word-wrap: break-word;
+    word-wrap: normal;
+    white-space: normal;
 }
 
 .plk-dd-spacing {
@@ -257,7 +258,11 @@ app {
         opacity: 0.9
     }
 
- /*Login page */
+.mat-accordion .mat-expansion-panel__header {
+    flex-basis: auto;
+}
+
+/*Login page */
 .login-body {
     position: relative;
 }

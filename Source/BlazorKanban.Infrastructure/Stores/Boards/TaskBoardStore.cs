@@ -38,10 +38,8 @@ namespace BlazorKanban.Infrastructure.Stores.Boards
             if (board == null) throw new ArgumentNullException(nameof(board));
 
             var mongoBoard = mapper.Map<TBoard, TMongoCollection>(board);
-
-            var foundBoard = await _boardsCollection.FirstOrDefaultAsync(x => x.Title == mongoBoard.Title, cancellationToken).ConfigureAwait(false);
-
-            if (foundBoard == null) await _boardsCollection.InsertOneAsync(mongoBoard, cancellationToken: cancellationToken).ConfigureAwait(false);
+            
+            await _boardsCollection.InsertOneAsync(mongoBoard, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             return mongoBoard.Id.ToString();
         }

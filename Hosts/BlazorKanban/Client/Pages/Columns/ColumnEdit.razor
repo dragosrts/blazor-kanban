@@ -4,17 +4,20 @@
 
 <MatDialog @bind-IsOpen="@IsOpen">
     <EditForm Model="@ColumnModel" OnValidSubmit="SubmitForm">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
         <MatDialogTitle>Edit column</MatDialogTitle>
+        <p>
+            <DataAnnotationsValidator />
+            @*<ValidationSummary />*@
+        </p>
         <MatDivider></MatDivider>
         <MatDialogContent>
             <p>
                 <label for="column-title">Column Title</label>
                 <MatTextField Id="column-title" @bind-Value="@ColumnModel.Title" FullWidth="true"></MatTextField>
+                <ValidationMessage For="@(() => ColumnModel.Title)" />
             </p>
             <p>
-                <label for="column-description">Column Description</label>
+                <label for="column-description">Column Description (optional)</label>
                 <MatTextField Id="column-description" @bind-Value="@ColumnModel.Description" FullWidth="true" TextArea="true"></MatTextField>
             </p>
         </MatDialogContent>

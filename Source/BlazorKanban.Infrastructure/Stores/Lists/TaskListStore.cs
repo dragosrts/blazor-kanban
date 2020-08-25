@@ -39,9 +39,7 @@ namespace BlazorKanban.Infrastructure.Stores.Lists
 
             var mongoList = mapper.Map<TList, TMongoCollection>(list);
 
-            var foundList = await _listsCollection.FirstOrDefaultAsync(x => x.Title == mongoList.Title, cancellationToken).ConfigureAwait(false);
-
-            if (foundList == null) await _listsCollection.InsertOneAsync(mongoList, cancellationToken: cancellationToken).ConfigureAwait(false);
+            await _listsCollection.InsertOneAsync(mongoList, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             return mongoList.Id.ToString();
         }
@@ -65,10 +63,26 @@ namespace BlazorKanban.Infrastructure.Stores.Lists
         public async Task<bool> DeleteAsync(string Id, CancellationToken cancellationToken)
         {
             if (Id == null) throw new ArgumentNullException(nameof(Id));
-            
+
             var mongoListId = ObjectId.Parse(Id);
 
             var result = await _listsCollection.DeleteOneAsync(x => x.Id == mongoListId, cancellationToken).ConfigureAwait(false);
+
+            if (result.DeletedCount > 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<bool> DeleteAllByTaskBoardIdAsync(string taskBoardId, CancellationToken cancellationToken)
+        {
+            if (taskBoardId == null) throw new ArgumentNullException(nameof(taskBoardId));
+
+            var mongoTaskBoardId = ObjectId.Parse(taskBoardId);
+
+            var result = await _listsCollection.DeleteManyAsync(x => x.BoardId == mongoTaskBoardId, cancellationToken).ConfigureAwait(false);
 
             if (result.DeletedCount > 0)
             {
