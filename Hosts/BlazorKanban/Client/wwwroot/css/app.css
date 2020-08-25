@@ -222,7 +222,7 @@ app {
 
 .item-boundaries {
     width: 375px;
-    word-wrap: normal;
+    word-wrap: break-word;
     white-space: normal;
 }
 
@@ -261,6 +261,13 @@ app {
 .mat-accordion .mat-expansion-panel__header {
     flex-basis: auto;
 }
+
+/*.mat .mat-h6 > span {
+    color: #6200ee;
+    opacity: 0.2;
+    float: right;
+    font-size: small;
+}*/
 
 /*Login page */
 .login-body {
