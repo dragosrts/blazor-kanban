@@ -1,0 +1,72 @@
+﻿@attribute [Authorize]
+@page "/column/create";
+@inject HttpClient Http
+
+<MatDialog @bind-IsOpen="@IsOpen">
+    <EditForm Model="@ColumnModel" OnValidSubmit="SubmitForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <MatDialogTitle>Add new column</MatDialogTitle>
+        <MatDivider></MatDivider>
+        <MatDialogContent>
+            <p>
+                <label for="column-title">Column Title</label>
+                <MatTextField Id="column-title" @bind-Value="@ColumnModel.Title" FullWidth="true"></MatTextField>
+            </p>
+            <p>
+                <label for="column-description">Column Description</label>
+                <MatTextField Id="column-description" @bind-Value="@ColumnModel.Description" FullWidth="true" TextArea="true"></MatTextField>
+            </p>
+        </MatDialogContent>
+        <MatDialogActions>
+            <MatButton Type="submit">Save</MatButton>
+            <MatButton Type="button" OnClick="Close">Cancel</MatButton>
+        </MatDialogActions>
+    </EditForm>
+</MatDialog>
+
+@code  {
+    [Parameter] public string BoardId { get; set; }
+
+    [Parameter] public EventCallback OnSubmitCallback { get; set; }
+
+    private BlazorKanban.Shared.Column ColumnModel { get; set; } = new Column();
+
+    private bool IsOpen { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        ColumnModel = new BlazorKanban.Shared.Column();
+
+        ColumnModel.BoardId = BoardId;
+    }
+
+    public void Open()
+    {
+        IsOpen = true;
+
+        ColumnModel = new BlazorKanban.Shared.Column();
+
+        StateHasChanged();
+    }
+
+    void Close()
+    {
+        IsOpen = false;
+
+        ColumnModel = new BlazorKanban.Shared.Column();
+    }
+
+    private async Task SubmitForm()
+    {
+        ColumnModel.BoardId = BoardId;
+
+        await Http.PostAsJsonAsync<BlazorKanban.Shared.Column>($"api/tasklists", ColumnModel);
+
+        ColumnModel = new BlazorKanban.Shared.Column();
+
+        IsOpen = false;
+
+        await OnSubmitCallback.InvokeAsync(this);
+    }
+}

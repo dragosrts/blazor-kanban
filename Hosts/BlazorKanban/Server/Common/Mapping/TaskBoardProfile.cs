@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace BlazorKanban.Server.Mapping
+namespace BlazorKanban.Server.Common.Mapping
 {
     public class TaskBoardProfile : Profile
     {

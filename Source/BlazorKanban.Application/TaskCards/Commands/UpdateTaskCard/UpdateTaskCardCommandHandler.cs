@@ -25,7 +25,8 @@ namespace BlazorKanban.Application.TaskCards.Commands.UpdateTaskCard
                     id: request.Id,
                     listId: request.ListId,
                     title: request.Title,
-                    description: request.Description
+                    description: request.Description,
+                    position: request.Position
                 );
 
             var taskCardResult = await updateTaskCard.UpdateAsync(entity, cancellationToken).ConfigureAwait(false);

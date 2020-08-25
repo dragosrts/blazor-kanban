@@ -1,0 +1,68 @@
+﻿@attribute [Authorize]
+@page "/column/edit/{columnid}";
+@inject HttpClient Http
+
+<MatDialog @bind-IsOpen="@IsOpen">
+    <EditForm Model="@ColumnModel" OnValidSubmit="SubmitForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <MatDialogTitle>Edit column</MatDialogTitle>
+        <MatDivider></MatDivider>
+        <MatDialogContent>
+            <p>
+                <label for="column-title">Column Title</label>
+                <MatTextField Id="column-title" @bind-Value="@ColumnModel.Title" FullWidth="true"></MatTextField>
+            </p>
+            <p>
+                <label for="column-description">Column Description</label>
+                <MatTextField Id="column-description" @bind-Value="@ColumnModel.Description" FullWidth="true" TextArea="true"></MatTextField>
+            </p>
+        </MatDialogContent>
+        <MatDialogActions>
+            <MatButton Type="button" Icon="delete_forever" OnClick="async () => await Delete(ColumnModel.Id)" Style="color:darkred; margin-right: auto;">Delete</MatButton>
+            <MatButton Type="submit">Save</MatButton>
+            <MatButton Type="button" OnClick="Close">Cancel</MatButton>
+        </MatDialogActions>
+    </EditForm>
+</MatDialog>
+
+@code  {
+    [Parameter] public EventCallback OnSubmitCallback { get; set; }
+
+    private BlazorKanban.Shared.Column ColumnModel { get; set; } = new Column();
+
+    private bool IsOpen { get; set; } = false;
+
+    public async Task Open(string columnId)
+    {
+        IsOpen = true;
+        ColumnModel = await Http.GetFromJsonAsync<Column>($"api/tasklists/{columnId}");
+
+        StateHasChanged();
+    }
+
+    private void Close()
+    {
+        IsOpen = false;
+
+        StateHasChanged();
+    }
+
+    private async Task Delete(string columnId)
+    {
+        await Http.DeleteAsync($"api/tasklists/{columnId}");
+
+        IsOpen = false;
+
+        await OnSubmitCallback.InvokeAsync(this);
+    }
+
+    private async Task SubmitForm()
+    {
+        await Http.PutAsJsonAsync<BlazorKanban.Shared.Column>($"api/tasklists/{ColumnModel.Id}", ColumnModel);
+
+        IsOpen = false;
+
+        await OnSubmitCallback.InvokeAsync(this);
+    }
+}

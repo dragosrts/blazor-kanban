@@ -9,7 +9,7 @@ else
     <MatCard Class="card-block">
         <MatCardContent Class="p-3">
             <MatHeadline6>
-                @Card.Title
+                @Card.Title - @Card.Position
             </MatHeadline6>
             <MatBody2>
                 @Card.Description
@@ -17,7 +17,7 @@ else
         </MatCardContent>
         <MatCardActions>
             <MatCardActionButtons>
-                <MatButton Icon="@MatIconNames.Edit">Edit</MatButton>
+                <MatButton Icon="@MatIconNames.Edit" @onclick="OnEditCallback">Edit</MatButton>
             </MatCardActionButtons>
         </MatCardActions>
     </MatCard>
@@ -25,4 +25,6 @@ else
 
 @code {
     [CascadingParameter] public Card Card { get; set; }
+
+    [Parameter] public EventCallback OnEditCallback { get; set; }
 }

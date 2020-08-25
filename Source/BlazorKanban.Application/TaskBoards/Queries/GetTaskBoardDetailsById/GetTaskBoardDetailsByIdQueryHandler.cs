@@ -5,6 +5,7 @@ using BlazorKanban.Domain.Objects.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,9 +40,9 @@ namespace BlazorKanban.Application.TaskBoards.Queries.GetTaskBoardDetailsById
             {
                 if (column == null) throw new ArgumentNullException(nameof(column));
 
-                var taskCards = new List<TaskCard>();
+                var orderedTaskCards = new List<TaskCard>();
 
-                taskCards.AddRange(await taskCardGetter.GetAllByTaskListIdAsync(column.Id, cancellationToken));
+                orderedTaskCards.AddRange((await taskCardGetter.GetAllByTaskListIdAsync(column.Id, cancellationToken)).OrderBy(opts => opts.Position));
 
                 taskLists.Add(
                     new TaskList(
@@ -49,7 +50,7 @@ namespace BlazorKanban.Application.TaskBoards.Queries.GetTaskBoardDetailsById
                         boardId: column.BoardId,
                         title: column.Title,
                         description: column.Description,
-                        cards: taskCards
+                        cards: orderedTaskCards
                         )
                     );
             }

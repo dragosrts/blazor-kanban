@@ -25,21 +25,19 @@ else
                         </MatCardContent>
                         <MatCardActions>
                             <MatCardActionButtons>
-                                <MatButton Icon="@MatIconNames.Edit" OnClick="async () => await BoardEditModal.Open(board.Id)">Edit</MatButton>
+                                <MatButton Icon="@MatIconNames.Edit" OnClick="async () => await EditBoard(board.Id)">Edit</MatButton>
                             </MatCardActionButtons>
                         </MatCardActions>
                     </MatCard>
                 </div>
             }
             <div class="mat-layout-grid-cell mat-layout-grid-cell-span-6">
-                <MatButton Icon="@MatIconNames.Add" Class="board-block item-boundaries" OnClick="() => BoardCreateModal.Open()">&nbsp; Add Board</MatButton>
+                <MatButton Icon="@MatIconNames.Add" Class="board-block item-boundaries" OnClick="() => AddBoard()">&nbsp; Add Board</MatButton>
             </div>
-
-            <BoardCreate @ref="BoardCreateModal" UserId="@UserId" OnSubmitCallback="Reload"></BoardCreate>
-
-            <BoardEdit @ref="BoardEditModal" OnSubmitCallback="Reload"></BoardEdit>
         </div>
     </div>
+    <BoardCreate @ref="BoardCreateModal" UserId="@UserId" OnSubmitCallback="Reload"></BoardCreate>
+    <BoardEdit @ref="BoardEditModal" OnSubmitCallback="Reload"></BoardEdit>
 }
 
 @code {
@@ -53,11 +51,22 @@ else
     protected override async Task OnInitializedAsync()
     {
         boards = await Http.GetFromJsonAsync<Board[]>($"api/taskboards/{UserId}/boards");
+        StateHasChanged();
     }
 
     private void GoToBoard(string id)
     {
         NavigationManager.NavigateTo($"board/{id}");
+    }
+
+    private void AddBoard()
+    {
+        BoardCreateModal.Open();
+    }
+
+    private async Task EditBoard(string id)
+    {
+        await BoardEditModal.Open(id);
     }
 
     private async Task Reload()

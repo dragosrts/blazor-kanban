@@ -3,7 +3,7 @@
 @inject HttpClient Http
 
 <MatDialog @bind-IsOpen="@IsOpen">
-    <EditForm Model="@boardModel" OnValidSubmit="SubmitForm">
+    <EditForm Model="@BoardModel" OnValidSubmit="SubmitForm">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <MatDialogTitle>Add new board</MatDialogTitle>
@@ -11,11 +11,11 @@
         <MatDialogContent>
             <p>
                 <label for="board-title">Board Title</label>
-                <MatTextField Id="board-title" @bind-Value="@boardModel.Title" FullWidth="true"></MatTextField>
+                <MatTextField Id="board-title" @bind-Value="@BoardModel.Title" FullWidth="true"></MatTextField>
             </p>
             <p>
                 <label for="board-description">Board Description</label>
-                <MatTextField Id="board-description" @bind-Value="@boardModel.Description" FullWidth="true" TextArea="true"></MatTextField>
+                <MatTextField Id="board-description" @bind-Value="@BoardModel.Description" FullWidth="true" TextArea="true"></MatTextField>
             </p>
         </MatDialogContent>
         <MatDialogActions>
@@ -30,22 +30,22 @@
 
     [Parameter] public EventCallback OnSubmitCallback { get; set; }
 
-    private BlazorKanban.Shared.Board boardModel;
+    private BlazorKanban.Shared.Board BoardModel { get; set; } = new Board();
 
     private bool IsOpen { get; set; } = false;
 
     protected override void OnInitialized()
     {
-        boardModel = new BlazorKanban.Shared.Board();
+        BoardModel = new BlazorKanban.Shared.Board();
 
-        boardModel.UserId = UserId;
+        BoardModel.UserId = UserId;
     }
 
     public void Open()
     {
         IsOpen = true;
 
-        boardModel = new BlazorKanban.Shared.Board();
+        BoardModel = new BlazorKanban.Shared.Board();
 
         StateHasChanged();
     }
@@ -54,16 +54,16 @@
     {
         IsOpen = false;
 
-        boardModel = new BlazorKanban.Shared.Board();
+        BoardModel = new BlazorKanban.Shared.Board();
     }
 
     private async Task SubmitForm()
     {
-        boardModel.UserId = UserId;
+        BoardModel.UserId = UserId;
 
-        await Http.PostAsJsonAsync<BlazorKanban.Shared.Board>($"api/taskboards", boardModel);
+        await Http.PostAsJsonAsync<BlazorKanban.Shared.Board>($"api/taskboards", BoardModel);
 
-        boardModel = new BlazorKanban.Shared.Board();
+        BoardModel = new BlazorKanban.Shared.Board();
 
         IsOpen = false;
 

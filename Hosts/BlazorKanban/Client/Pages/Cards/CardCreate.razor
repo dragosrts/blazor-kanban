@@ -1,25 +1,24 @@
 ﻿@attribute [Authorize]
-@page "/card/edit/{cardid}";
+@page "/card/create";
 @inject HttpClient Http
 
 <MatDialog @bind-IsOpen="@IsOpen">
     <EditForm Model="@CardModel" OnValidSubmit="SubmitForm">
         <DataAnnotationsValidator />
         <ValidationSummary />
-        <MatDialogTitle>Edit card</MatDialogTitle>
+        <MatDialogTitle>Add new card</MatDialogTitle>
         <MatDivider></MatDivider>
         <MatDialogContent>
             <p>
-                <label for="card-title">card Title</label>
+                <label for="card-title">Card Title</label>
                 <MatTextField Id="card-title" @bind-Value="@CardModel.Title" FullWidth="true"></MatTextField>
             </p>
             <p>
-                <label for="card-description">card Description</label>
+                <label for="card-description">Card Description</label>
                 <MatTextField Id="card-description" @bind-Value="@CardModel.Description" FullWidth="true" TextArea="true"></MatTextField>
             </p>
         </MatDialogContent>
         <MatDialogActions>
-            <MatButton Type="button" Icon="delete_forever" OnClick="async () => await Delete(CardModel.Id)" Style="color:darkred; margin-right: auto;">Delete</MatButton>
             <MatButton Type="submit">Save</MatButton>
             <MatButton Type="button" OnClick="Close">Cancel</MatButton>
         </MatDialogActions>
@@ -27,39 +26,49 @@
 </MatDialog>
 
 @code  {
+    [Parameter] public string ColumnId { get; set; }
+
+    [Parameter] public long CardsCount { get; set; }
+
     [Parameter] public EventCallback OnSubmitCallback { get; set; }
 
     private BlazorKanban.Shared.Card CardModel { get; set; } = new Card();
 
     private bool IsOpen { get; set; } = false;
 
-    public async Task Open(string cardId)
+    protected override void OnInitialized()
+    {
+        CardModel = new BlazorKanban.Shared.Card();
+
+        CardModel.ColumnId = ColumnId;
+        CardModel.Position = CardsCount + 1;
+    }
+
+    public void Open()
     {
         IsOpen = true;
-        CardModel = await Http.GetFromJsonAsync<Card>($"api/taskcards/{cardId}");
+
+        CardModel = new BlazorKanban.Shared.Card();
 
         StateHasChanged();
     }
 
-    private void Close()
+    void Close()
     {
         IsOpen = false;
 
-        StateHasChanged();
-    }
-
-    private async Task Delete(string cardId)
-    {
-        await Http.DeleteAsync($"api/taskcards/{cardId}");
-
-        IsOpen = false;
-
-        await OnSubmitCallback.InvokeAsync(this);
+        CardModel = new BlazorKanban.Shared.Card();
     }
 
     private async Task SubmitForm()
     {
-        await Http.PutAsJsonAsync<BlazorKanban.Shared.Card>($"api/taskcards/{CardModel.Id}", CardModel);
+        CardModel.ColumnId = ColumnId;
+        CardModel.Position = CardsCount + 1;
+
+        var response = await Http.PostAsJsonAsync<BlazorKanban.Shared.Card>($"api/taskcards", CardModel);
+        response.EnsureSuccessStatusCode();
+
+        CardModel = new BlazorKanban.Shared.Card();
 
         IsOpen = false;
 

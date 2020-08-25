@@ -2,7 +2,9 @@
 using BlazorKanban.Application.TaskCards.Commands.CreateTaskCard;
 using BlazorKanban.Application.TaskCards.Commands.DeleteTaskCard;
 using BlazorKanban.Application.TaskCards.Commands.UpdateTaskCard;
+using BlazorKanban.Application.TaskCards.Commands.UpdateTaskCardsDetails;
 using BlazorKanban.Application.TaskCards.Queries.GetAllTaskCardsByListId;
+using BlazorKanban.Application.TaskCards.Queries.GetTaskCardById;
 using BlazorKanban.Domain.Objects.Entities;
 using BlazorKanban.Shared;
 using MediatR;
@@ -31,7 +33,7 @@ namespace BlazorKanban.Server.Controllers
         }
 
         [HttpGet("{columnid}/cards")]
-        public async Task<IEnumerable<Card>> GetTaskBoards(string columnid)
+        public async Task<IEnumerable<Card>> GetTaskCardsByColumnId(string columnid)
         {
             var result = await mediator.Send(new GetAllTaskCardsByListIdQuery(listId: columnid));
 
@@ -40,14 +42,27 @@ namespace BlazorKanban.Server.Controllers
             return response;
         }
 
+        [HttpGet("{id}")]
+        public async Task<Card> GetTaskCard(string id)
+        {
+            var result = await mediator.Send(new GetTaskCardByIdQuery(cardId: id));
+
+            var response = mapper.Map<Card>(result);
+
+            return response;
+        }
+
         [HttpPost]
         public async Task<ActionResult<string>> CreateTaskCard(Card card)
         {
+            var request = mapper.Map<TaskCard>(card);
+
             var result = await mediator.Send(
                 new CreateTaskCardCommand(
-                    listId: card.ColumnId,
-                    title: card.Title,
-                    description: card.Description
+                    listId: request.ListId,
+                    title: request.Title,
+                    description: request.Description,
+                    position: request.Position
                 ));
 
             return Ok(result);
@@ -63,8 +78,32 @@ namespace BlazorKanban.Server.Controllers
                     id: request.Id,
                     listId: request.ListId,
                     title: request.Title,
-                    description: request.Description
+                    description: request.Description,
+                    position: request.Position
                 ));
+
+            return Ok(result);
+        }
+
+        [HttpPut("{columnid}/cards")]
+        public async Task<ActionResult<bool>> UpdateTaskCards(IEnumerable<Card> cards)
+        {
+            var requestDetails = mapper.Map<IEnumerable<TaskCard>>(cards);
+
+            var taskCardDetails = new List<TaskCardDetail>();
+
+            foreach (var requestDetail in requestDetails)
+            {
+                taskCardDetails.Add(new TaskCardDetail(
+                        id: requestDetail.Id,
+                        listId: requestDetail.ListId,
+                        title: requestDetail.Title,
+                        description: requestDetail.Description,
+                        position: requestDetail.Position
+                    ));
+            }
+
+            var result = await mediator.Send(new UpdateTaskCardsDetailsCommand(taskCardDetails));
 
             return Ok(result);
         }

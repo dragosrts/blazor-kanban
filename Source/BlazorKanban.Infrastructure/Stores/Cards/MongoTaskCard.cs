@@ -17,5 +17,7 @@ namespace BlazorKanban.Infrastructure.Stores.Cards
         public string Title { get; set; }
 
         public string Description { get; set; }
+
+        public long Position { get; set; }
     }
 }

@@ -2,10 +2,10 @@ using AspNetCore.Identity.Mongo;
 using AutoMapper;
 using BlazorKanban.Application;
 using BlazorKanban.Infrastructure;
+using BlazorKanban.Server.Common.Middleware;
 using BlazorKanban.Server.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
@@ -47,7 +47,7 @@ namespace BlazorKanban.Server
                     identityOptions.Password.RequiredLength = 6;
                     identityOptions.Password.RequireLowercase = false;
                     identityOptions.Password.RequireUppercase = false;
-                    identityOptions.Password.RequireNonAlphanumeric = 
+                    identityOptions.Password.RequireNonAlphanumeric =
                     false;
                     identityOptions.Password.RequireDigit = false;
                     // Lockout settings
@@ -91,7 +91,6 @@ namespace BlazorKanban.Server
                 opts.MimeTypes =
                     ResponseCompressionDefaults.MimeTypes.Concat(new[] { "application/octet-stream" });
             });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -109,6 +108,7 @@ namespace BlazorKanban.Server
                 app.UseHsts();
             }
 
+            app.UseCustomExceptionHandler();
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();

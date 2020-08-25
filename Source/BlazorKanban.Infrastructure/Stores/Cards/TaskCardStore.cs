@@ -36,7 +36,7 @@ namespace BlazorKanban.Infrastructure.Stores.Cards
         public async Task<string> CreateAsync(TCard card, CancellationToken cancellationToken)
         {
             if (card == null) throw new ArgumentNullException(nameof(card));
-            
+
             var mongoCard = mapper.Map<TCard, TMongoCollection>(card);
 
             var foundCard = await _cardsCollection.FirstOrDefaultAsync(x => x.Title == mongoCard.Title, cancellationToken).ConfigureAwait(false);
@@ -54,12 +54,42 @@ namespace BlazorKanban.Infrastructure.Stores.Cards
 
             var updateDefinition =
                 Builders<TMongoCollection>.Update
+                .Set(c => c.ListId, mongoCard.ListId)
+                .Set(c => c.Position, mongoCard.Position)
                 .Set(c => c.Title, mongoCard.Title)
                 .Set(c => c.Description, mongoCard.Description);
 
             await _cardsCollection.UpdateOneAsync(x => x.Id == mongoCard.Id, updateDefinition, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             return mongoCard.Id.ToString();
+        }
+
+        public async Task<bool> UpdateTaskCardsPositionAsync(IList<TCard> cards, CancellationToken cancellationToken)
+        {
+            if (cards == null) throw new ArgumentNullException(nameof(cards));
+
+            var mongoCards = mapper.Map<IList<TCard>, IList<TMongoCollection>>(cards);
+
+            bool result = false;
+            long updatedTaskCardsCount = 0;
+
+            foreach (var mongoCard in mongoCards)
+            {
+                var updateDefinition =
+                    Builders<TMongoCollection>.Update
+                    .Set(c => c.Position, (long)mongoCards.IndexOf(mongoCard) + 1);
+
+                var updateResult = await _cardsCollection.UpdateOneAsync(x => x.Id == mongoCard.Id, updateDefinition, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+                updatedTaskCardsCount += updateResult.ModifiedCount;
+            }
+
+            if (updatedTaskCardsCount == mongoCards.Count)
+            {
+                result = true;
+            }
+
+            return result;
         }
 
         public async Task<bool> DeleteAsync(string Id, CancellationToken cancellationToken)

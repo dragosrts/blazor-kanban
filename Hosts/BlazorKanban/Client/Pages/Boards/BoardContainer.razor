@@ -1,9 +1,9 @@
 ﻿@attribute [Authorize]
-@page "/board/{BoardId}"
+@page "/board/{boardid}"
 @inject HttpClient Http
 @using BlazorKanban.Client.Pages.Columns
 
-@if (board == null)
+@if (BoardModel == null)
 {
     <Loading />
 }
@@ -12,46 +12,59 @@ else
     <div class="mx-5 my-3">
         <div class="mat-elevation-z24">
             <div class="px-5 py-3">
-                <MatHeadline3>@board.Title</MatHeadline3>
-                <MatSubtitle2>@board.Description</MatSubtitle2>
+                <MatHeadline3>@BoardModel.Title</MatHeadline3>
+                <MatSubtitle2>@BoardModel.Description</MatSubtitle2>
             </div>
         </div>
     </div>
 
     <div class="mat-layout-grid">
         <div class="mat-layout-grid-inner row flex-row flex-sm-nowrap">
-            @foreach (var column in board.Columns)
+            @foreach (var column in BoardModel.Columns)
             {
                 <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">
                     <CascadingValue Value="column">
-                        <ColumnContainer @key="column" Class="column-block item-boundaries" />
+                        <ColumnContainer Class="column-block item-boundaries" OnEditCallback="async () => await EditColumn(column.Id)" OnSubmitCallback="Reload" />
                     </CascadingValue>
-
-                    @*<ColumnContainer Column="column" Class="column-block item-boundaries" />*@
                 </div>
             }
             <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">
-                <MatButton Outlined="true" Dense="true" Icon="@MatIconNames.View_column" Class="column-block item-boundaries" OnClick="AddColumn">&nbsp; Add Column</MatButton>
+                <MatButton Outlined="true" Dense="true" Icon="@MatIconNames.View_column" Class="column-block item-boundaries" OnClick="async () => await AddColumn()">&nbsp; Add Column</MatButton>
             </div>
         </div>
     </div>
+    <ColumnCreate @ref="ColumnCreateModal" BoardId="@BoardId" OnSubmitCallback="Reload"></ColumnCreate>
+    <ColumnEdit @ref="ColumnEditModal" OnSubmitCallback="Reload"></ColumnEdit>
 }
 
 @code {
-    private Board board;
+    [Parameter] public string BoardId { get; set; }
 
-    [Parameter]
-    public string BoardId { get; set; }
+    private Board BoardModel { get; set; }
+
+    private ColumnCreate ColumnCreateModal { get; set; }
+    private ColumnEdit ColumnEditModal { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        board = await Http.GetFromJsonAsync<Board>($"api/taskboards/{BoardId}");
-
-        //board = await Http.GetFromJsonAsync<Board>("api/taskboards/5f2c15d77a65952d71665819");
+        BoardModel = await Http.GetFromJsonAsync<Board>($"api/taskboards/{BoardId}");
+        StateHasChanged();
     }
 
-    private void AddColumn()
+    private async Task AddColumn()
     {
-        // Update the card with the new column id
+        ColumnCreateModal.Open();
+    }
+
+    private async Task EditColumn(string id)
+    {
+        await ColumnEditModal.Open(id);
+    }
+
+    private async Task Reload()
+    {
+        BoardModel = await Http.GetFromJsonAsync<Board>($"api/taskboards/{BoardId}");
+
+        StateHasChanged();
     }
 }

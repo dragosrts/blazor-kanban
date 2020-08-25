@@ -25,7 +25,8 @@ namespace BlazorKanban.Application.TaskCards.Commands.CreateTaskCard
                     id: createTaskCard.GenerateIdentifier(),
                     listId: request.ListId,
                     title: request.Title,
-                    description: request.Description
+                    description: request.Description,
+                    position: request.Position
                 );
 
             var cardResult = await createTaskCard.CreateAsync(entity, cancellationToken).ConfigureAwait(false);

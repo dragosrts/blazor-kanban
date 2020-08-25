@@ -2,6 +2,7 @@
 using BlazorKanban.Application.TaskLists.Commands.CreateTaskList;
 using BlazorKanban.Application.TaskLists.Commands.DeleteTaskList;
 using BlazorKanban.Application.TaskLists.Commands.UpdateTaskList;
+using BlazorKanban.Application.TaskLists.Queries.GetTaskListDetailsById;
 using BlazorKanban.Domain.Objects.Entities;
 using BlazorKanban.Shared;
 using MediatR;
@@ -28,6 +29,16 @@ namespace BlazorKanban.Server.Controllers
             this.mapper = mapper;
         }
 
+        [HttpGet("{id}")]
+        public async Task<Column> GetTaskList(string id)
+        {
+            var result = await mediator.Send(new GetTaskListDetailsByIdQuery(id: id));
+
+            var response = mapper.Map<Column>(result);
+
+            return response;
+        }
+
         [HttpPost]
         public async Task<ActionResult<string>> CreateTaskList(Column column)
         {
@@ -40,7 +51,6 @@ namespace BlazorKanban.Server.Controllers
 
             return Ok(result);
         }
-
 
         [HttpPut("{id}")]
         public async Task<ActionResult<string>> UpdateTaskList(Column column)
@@ -58,7 +68,6 @@ namespace BlazorKanban.Server.Controllers
 
             return Ok(result);
         }
-
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> DeleteTaskList(string id)

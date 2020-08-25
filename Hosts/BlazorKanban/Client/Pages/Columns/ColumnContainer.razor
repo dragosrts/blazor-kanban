@@ -1,4 +1,5 @@
 ﻿@attribute [Authorize]
+@page "/column/{columnid}"
 @inject HttpClient Http
 @using BlazorKanban.Client.Pages.Cards
 
@@ -8,7 +9,7 @@
 }
 else
 {
-    <MatCard Id="@Column.Id" Class="@Class">
+    <MatCard Id="@ComputeColumnId(Column.Id)" Class="@Class">
         <MatCardContent>
             <MatAccordion>
                 <MatExpansionPanel>
@@ -23,46 +24,122 @@ else
                         <MatSubtitle2>
                             @Column.Description
                         </MatSubtitle2>
-                        <MatButton Icon="@MatIconNames.Edit">Edit</MatButton>
+                        <MatButton Icon="@MatIconNames.Edit" @onclick="OnEditCallback">Edit</MatButton>
                     </MatExpansionPanelDetails>
                 </MatExpansionPanel>
             </MatAccordion>
             <MatBody2>
-                <Dropzone Id="@Column.Id" Class="m-3 item-dropzone" Style="DragDropStyle.Custom" Items="Column.Cards" TItem="Card" OnItemDrop="UpdateCard" InstantReplace="true">
+                <Dropzone Id="@ComputeDropzoneId(Column.Id)"
+                          Class="m-3 item-dropzone"
+                          Style="DragDropStyle.Custom"
+                          Items="Column.Cards"
+                          TItem="Card"
+                          OnItemDrop="@(async (c) => await UpdateCard(c))"
+                          InstantReplace="true">
                     <CascadingValue Value="@context" @key="@context">
-                        <CardContainer />
+                        <CardContainer OnEditCallback="async () => await EditCard(context.Id)" />
                     </CascadingValue>
-                    @*<CardContainer Card="@context" />*@
                 </Dropzone>
             </MatBody2>
         </MatCardContent>
         <MatCardActions>
             <MatCardActionButtons>
-                <MatButton @onclick="ShowModal">&nbsp; Add Card</MatButton>
+                <MatButton @onclick="() => AddCard()">&nbsp; Add Card</MatButton>
             </MatCardActionButtons>
         </MatCardActions>
     </MatCard>
+
+    <CardCreate @ref="CardCreateModal" ColumnId="@Column.Id" CardsCount="@Column.Cards.Count" OnSubmitCallback="OnSubmitCallback"></CardCreate>
+    <CardEdit @ref="CardEditModal" OnSubmitCallback="OnSubmitCallback"></CardEdit>
 }
 
 @code {
-    bool panelOpenState;
-
     [CascadingParameter] public Column Column { get; set; }
+
+    [Parameter] public EventCallback OnEditCallback { get; set; }
+
+    [Parameter] public EventCallback OnSubmitCallback { get; set; }
 
     [Parameter] public string Class { get; set; }
 
-    private void ShowModal()
+    private CardCreate CardCreateModal { get; set; }
+    private CardEdit CardEditModal { get; set; }
+
+    private string ComputeColumnId(string id)
     {
-        //var parameters = new ModalParameters();
-        //parameters.Add(nameof(Card.ColumnId), Column.Id);
-
-        //Modal.Show<CardEdit>($"Create a new Card on {Column.Title}", parameters);
-
-        this.StateHasChanged();
+        return $"col_id_{id}";
     }
 
-    private void UpdateCard()
+    private string ComputeDropzoneId(string id)
     {
-        // Update the card with the new column id
+        return $"dz_id_{id}";
+    }
+
+    private void AddCard()
+    {
+        CardCreateModal.Open();
+    }
+
+    private async Task EditCard(string id)
+    {
+        await CardEditModal.Open(id);
+    }
+
+    private async Task UpdateCard(Card card)
+    {
+        var oldColumnId = card.ColumnId;
+
+        var cardList = new List<Card>();
+
+        if (oldColumnId == Column.Id)
+        {
+            await UpdatePositioningOnCardEnterColumn();
+        }
+        else
+        {
+            await UpdatePositioningOnCardEnterColumn();
+            await UpdatePositioningOnCardLeaveColumn(oldColumnId);
+        }
+
+        //Notify parent to render
+        await OnSubmitCallback.InvokeAsync(this);
+    }
+
+    private async Task UpdatePositioningOnCardEnterColumn()
+    {
+        // Reset positions in the column where the card entered
+        var newColumnCardList = new List<Card>();
+
+        foreach (var card in Column.Cards)
+        {
+            card.ColumnId = Column.Id;
+            card.Position = (long)Column.Cards.IndexOf(card) + 1;
+
+            newColumnCardList.Add(card);
+        }
+
+        // Call API to update the cards
+        var responseMessage = await Http.PutAsJsonAsync<IEnumerable<Card>>($"api/taskcards/{Column.Id}/cards", newColumnCardList);
+        responseMessage.EnsureSuccessStatusCode();
+    }
+
+    private async Task UpdatePositioningOnCardLeaveColumn(string fromColumnId)
+    {
+        // Reset positions in the column where the card left
+        var oldColumnId = fromColumnId;
+        var oldColumnCardList = new List<Card>();
+
+        var oldColumn = await Http.GetFromJsonAsync<Column>($"api/tasklists/{oldColumnId}");
+
+        foreach (var c in oldColumn.Cards)
+        {
+            c.Position = (long)oldColumn.Cards.IndexOf(c) + 1;
+
+            oldColumnCardList.Add(c);
+        }
+
+        // Call API to update the cards
+        var responseMessage = await Http.PutAsJsonAsync<IEnumerable<Card>>($"api/taskcards/{oldColumnId}/cards", oldColumnCardList);
+        responseMessage.EnsureSuccessStatusCode();
     }
 }
