@@ -78,6 +78,7 @@
             matToaster.Add($"The \"{BoardModel.Title}\" board could not be deleted", MatToastType.Danger, "Delete");
         }
 
+        IsOpenedSecondDialog = false;
         IsOpen = false;
         await OnSubmitCallback.InvokeAsync(this);
     }
@@ -97,6 +98,7 @@
             matToaster.Add($"The \"{BoardModel.Title}\" board could not be updated", MatToastType.Danger, "Update");
         }
 
+        IsOpenedSecondDialog = false;
         IsOpen = false;
         await OnSubmitCallback.InvokeAsync(this);
     }
