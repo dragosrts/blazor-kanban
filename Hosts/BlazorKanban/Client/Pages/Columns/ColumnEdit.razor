@@ -20,6 +20,7 @@
             <p>
                 <label for="column-description">Column Description (optional)</label>
                 <MatTextField Id="column-description" @bind-Value="@ColumnModel.Description" FullWidth="true" TextArea="true"></MatTextField>
+                <ValidationMessage For="@(() => ColumnModel.Description)" />
             </p>
         </MatDialogContent>
         <MatDialogActions>

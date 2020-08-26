@@ -20,6 +20,7 @@
             <p>
                 <label for="board-description">Board Description (optional)</label>
                 <MatTextField Id="board-description" @bind-Value="@BoardModel.Description" FullWidth="true" TextArea="true"></MatTextField>
+                <ValidationMessage For="@(() => BoardModel.Description)" />
             </p>
         </MatDialogContent>
         <MatDialogActions>

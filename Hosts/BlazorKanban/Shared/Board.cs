@@ -13,6 +13,7 @@ namespace BlazorKanban.Shared
         [StringLength(25, ErrorMessage = "The title is too long.")]
         public string Title { get; set; }
 
+        [StringLength(255, ErrorMessage = "The description is too long.")]
         public string Description { get; set; }
 
         public IList<Column> Columns { get; set; }
