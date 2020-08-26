@@ -251,11 +251,12 @@ app {
 }
 
 .plk-dd-in-transit {
-    opacity: 0.9
+    opacity: 0.9;
+    background-color: lightskyblue;
 }
 
     .plk-dd-in-transit > div {
-        opacity: 0.9
+        opacity: 0.9;
     }
 
 .mat-accordion .mat-expansion-panel__header {

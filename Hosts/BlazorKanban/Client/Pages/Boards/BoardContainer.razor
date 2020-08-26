@@ -2,6 +2,7 @@
 @page "/board/{boardid}"
 @inject HttpClient Http
 @using BlazorKanban.Client.Pages.Columns
+@inject IMatToaster matToaster
 
 @if (BoardModel == null)
 {
@@ -9,14 +10,11 @@
 }
 else
 {
-    <div class="mx-5 my-3">
-        <div class="mat-elevation-z24">
-            <div class="px-5 py-3">
-                <MatHeadline3>@BoardModel.Title</MatHeadline3>
-                <MatSubtitle2>@BoardModel.Description</MatSubtitle2>
-            </div>
-        </div>
+    <div class="mx-5 px-5 py-2">
+        <MatHeadline3>@BoardModel.Title</MatHeadline3>
+        <MatSubtitle2>@BoardModel.Description</MatSubtitle2>
     </div>
+    <MatDivider></MatDivider>
 
     <div class="mat-layout-grid">
         <div class="mat-layout-grid-inner row flex-row flex-sm-nowrap">
@@ -24,12 +22,17 @@ else
             {
                 <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">
                     <CascadingValue Value="column">
-                        <ColumnContainer Class="column-block item-boundaries" OnEditCallback="async () => await EditColumn(column.Id)" OnSubmitCallback="Reload" />
+                        <ColumnContainer Class="column-block item-boundaries"
+                                         OnEditCallback="async () => await EditColumn(column.Id)"
+                                         OnSubmitCallback="Reload" />
                     </CascadingValue>
                 </div>
             }
             <div class="mat-layout-grid-cell mat-layout-grid-cell-span-3">
-                <MatButton Outlined="true" Dense="true" Icon="@MatIconNames.View_column" Class="column-block item-boundaries" OnClick="async () => await AddColumn()">&nbsp; Add Column</MatButton>
+                <MatButton Outlined="true" Dense="true"
+                           Icon="@MatIconNames.View_column"
+                           Class="column-block item-boundaries"
+                           OnClick="async () => await AddColumn()">&nbsp; Add Column</MatButton>
             </div>
         </div>
     </div>
@@ -48,6 +51,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         BoardModel = await Http.GetFromJsonAsync<Board>($"api/taskboards/{BoardId}");
+
         StateHasChanged();
     }
 
@@ -64,6 +68,8 @@ else
     private async Task Reload()
     {
         BoardModel = await Http.GetFromJsonAsync<Board>($"api/taskboards/{BoardId}");
+
+        matToaster.Add($"The \"{BoardModel.Title}\" board has been updated", MatToastType.Primary);
 
         StateHasChanged();
     }
