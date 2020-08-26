@@ -1,6 +1,7 @@
 ﻿@attribute [Authorize]
 @page "/column/create";
 @inject HttpClient Http
+@inject IMatToaster matToaster
 
 <MatDialog @bind-IsOpen="@IsOpen">
     <EditForm Model="@ColumnModel" OnValidSubmit="SubmitForm">
@@ -47,7 +48,6 @@
     public void Open()
     {
         IsOpen = true;
-
         ColumnModel = new BlazorKanban.Shared.Column();
 
         StateHasChanged();
@@ -56,7 +56,6 @@
     void Close()
     {
         IsOpen = false;
-
         ColumnModel = new BlazorKanban.Shared.Column();
     }
 
@@ -64,12 +63,20 @@
     {
         ColumnModel.BoardId = BoardId;
 
-        await Http.PostAsJsonAsync<BlazorKanban.Shared.Column>($"api/tasklists", ColumnModel);
+        var response = await Http.PostAsJsonAsync<BlazorKanban.Shared.Column>($"api/tasklists", ColumnModel);
+        response.EnsureSuccessStatusCode();
 
-        ColumnModel = new BlazorKanban.Shared.Column();
+        if (response.IsSuccessStatusCode)
+        {
+            matToaster.Add($"The \"{ColumnModel.Title}\" column has been created", MatToastType.Success, "Create");
+        }
+        else
+        {
+            matToaster.Add($"The \"{ColumnModel.Title}\" column could not be created", MatToastType.Danger, "Create");
+        }
 
         IsOpen = false;
-
+        ColumnModel = new BlazorKanban.Shared.Column();
         await OnSubmitCallback.InvokeAsync(this);
     }
 }

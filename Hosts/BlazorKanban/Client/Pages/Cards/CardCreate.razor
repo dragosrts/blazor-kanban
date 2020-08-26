@@ -1,6 +1,7 @@
 ﻿@attribute [Authorize]
 @page "/card/create";
 @inject HttpClient Http
+@inject IMatToaster matToaster
 
 <MatDialog @bind-IsOpen="@IsOpen">
     <EditForm Model="@CardModel" OnValidSubmit="SubmitForm">
@@ -71,10 +72,17 @@
         var response = await Http.PostAsJsonAsync<BlazorKanban.Shared.Card>($"api/taskcards", CardModel);
         response.EnsureSuccessStatusCode();
 
-        CardModel = new BlazorKanban.Shared.Card();
+        if (response.IsSuccessStatusCode)
+        {
+            matToaster.Add($"The \"{CardModel.Title}\" card has been created", MatToastType.Success, "Create");
+        }
+        else
+        {
+            matToaster.Add($"The \"{CardModel.Title}\" card could not be created", MatToastType.Danger, "Create");
+        }
 
         IsOpen = false;
-
+        CardModel = new BlazorKanban.Shared.Card();
         await OnSubmitCallback.InvokeAsync(this);
     }
 }

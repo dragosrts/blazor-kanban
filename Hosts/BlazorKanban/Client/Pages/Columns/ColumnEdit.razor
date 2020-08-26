@@ -1,6 +1,7 @@
 ﻿@attribute [Authorize]
 @page "/column/edit/{columnid}";
 @inject HttpClient Http
+@inject IMatToaster matToaster
 
 <MatDialog @bind-IsOpen="@IsOpen">
     <EditForm Model="@ColumnModel" OnValidSubmit="SubmitForm">
@@ -53,19 +54,37 @@
 
     private async Task Delete(string columnId)
     {
-        await Http.DeleteAsync($"api/tasklists/{columnId}");
+        var response = await Http.DeleteAsync($"api/tasklists/{columnId}");
+        response.EnsureSuccessStatusCode();
+
+        if (response.IsSuccessStatusCode)
+        {
+            matToaster.Add($"The \"{ColumnModel.Title}\" column has been deleted", MatToastType.Warning, "Delete");
+        }
+        else
+        {
+            matToaster.Add($"The \"{ColumnModel.Title}\" column could not be deleted", MatToastType.Danger, "Delete");
+        }
 
         IsOpen = false;
-
         await OnSubmitCallback.InvokeAsync(this);
     }
 
     private async Task SubmitForm()
     {
-        await Http.PutAsJsonAsync<BlazorKanban.Shared.Column>($"api/tasklists/{ColumnModel.Id}", ColumnModel);
+        var response = await Http.PutAsJsonAsync<BlazorKanban.Shared.Column>($"api/tasklists/{ColumnModel.Id}", ColumnModel);
+        response.EnsureSuccessStatusCode();
+
+        if (response.IsSuccessStatusCode)
+        {
+            matToaster.Add($"The \"{ColumnModel.Title}\" column has been updated", MatToastType.Success, "Update");
+        }
+        else
+        {
+            matToaster.Add($"The \"{ColumnModel.Title}\" column could not be updated", MatToastType.Danger, "Update");
+        }
 
         IsOpen = false;
-
         await OnSubmitCallback.InvokeAsync(this);
     }
 }

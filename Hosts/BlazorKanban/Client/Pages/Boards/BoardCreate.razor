@@ -1,6 +1,7 @@
 ﻿@attribute [Authorize]
 @page "/board/create";
 @inject HttpClient Http
+@inject IMatToaster matToaster
 
 <MatDialog @bind-IsOpen="@IsOpen">
     <EditForm Model="@BoardModel" OnValidSubmit="SubmitForm">
@@ -64,12 +65,20 @@
     {
         BoardModel.UserId = UserId;
 
-        await Http.PostAsJsonAsync<BlazorKanban.Shared.Board>($"api/taskboards", BoardModel);
+        var response = await Http.PostAsJsonAsync<BlazorKanban.Shared.Board>($"api/taskboards", BoardModel);
+        response.EnsureSuccessStatusCode();
 
-        BoardModel = new BlazorKanban.Shared.Board();
+        if (response.IsSuccessStatusCode)
+        {
+            matToaster.Add($"The \"{BoardModel.Title}\" board has been created", MatToastType.Success, "Create");
+        }
+        else
+        {
+            matToaster.Add($"The \"{BoardModel.Title}\" board could not be created", MatToastType.Danger, "Create");
+        }
 
         IsOpen = false;
-
+        BoardModel = new BlazorKanban.Shared.Board();
         await OnSubmitCallback.InvokeAsync(this);
     }
 }

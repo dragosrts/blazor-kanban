@@ -26,7 +26,7 @@ namespace BlazorKanban.Client
                 config.NewestOnTop = true;
                 config.ShowCloseButton = true;
                 config.MaximumOpacity = 95;
-                config.VisibleStateDuration = 1250;
+                config.VisibleStateDuration = 1800;
             });
 
             return services;

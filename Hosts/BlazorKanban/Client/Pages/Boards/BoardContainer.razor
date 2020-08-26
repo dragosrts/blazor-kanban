@@ -2,7 +2,6 @@
 @page "/board/{boardid}"
 @inject HttpClient Http
 @using BlazorKanban.Client.Pages.Columns
-@inject IMatToaster matToaster
 
 @if (BoardModel == null)
 {
@@ -68,8 +67,6 @@ else
     private async Task Reload()
     {
         BoardModel = await Http.GetFromJsonAsync<Board>($"api/taskboards/{BoardId}");
-
-        matToaster.Add($"The \"{BoardModel.Title}\" board has been updated", MatToastType.Primary);
 
         StateHasChanged();
     }

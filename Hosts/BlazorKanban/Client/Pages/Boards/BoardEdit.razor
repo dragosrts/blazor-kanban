@@ -1,6 +1,7 @@
 ﻿@attribute [Authorize]
 @page "/board/edit/{boardid}";
 @inject HttpClient Http
+@inject IMatToaster matToaster
 
 <MatDialog @bind-IsOpen="@IsOpen">
     <EditForm Model="@BoardModel" OnValidSubmit="SubmitForm">
@@ -22,11 +23,22 @@
             </p>
         </MatDialogContent>
         <MatDialogActions>
-            <MatButton Type="button" Icon="delete_forever" OnClick="async () => await Delete(BoardModel.Id)" Style="color:darkred; margin-right: auto;">Delete</MatButton>
+            <MatButton Type="button" Icon="delete_forever" OnClick="@(e => { IsOpenedSecondDialog = true; })" Style="color:darkred; margin-right: auto;">Delete</MatButton>
             <MatButton Type="submit">Save</MatButton>
             <MatButton Type="button" OnClick="Close">Cancel</MatButton>
         </MatDialogActions>
     </EditForm>
+</MatDialog>
+
+<MatDialog @bind-IsOpen="@IsOpenedSecondDialog">
+    <MatDialogTitle>Delete Confirmation</MatDialogTitle>
+    <MatDialogContent>
+        <p>Are you sure you want to delete the @BoardModel.Title and all it's components?</p>
+    </MatDialogContent>
+    <MatDialogActions>
+        <MatButton OnClick="@(async () => await Delete(BoardModel.Id))" Style="color:darkred;">Yes</MatButton>
+        <MatButton OnClick="@(e => { IsOpenedSecondDialog = false; })">No</MatButton>
+    </MatDialogActions>
 </MatDialog>
 
 @code  {
@@ -35,6 +47,7 @@
     private BlazorKanban.Shared.Board BoardModel { get; set; } = new Board();
 
     private bool IsOpen { get; set; } = false;
+    private bool IsOpenedSecondDialog { get; set; } = false;
 
     public async Task Open(string boardId)
     {
@@ -46,26 +59,45 @@
 
     private void Close()
     {
+        IsOpenedSecondDialog = false;
         IsOpen = false;
-
         StateHasChanged();
     }
 
     private async Task Delete(string boardId)
     {
+        var response = await Http.DeleteAsync($"api/taskboards/{boardId}");
+        response.EnsureSuccessStatusCode();
+
+        if (response.IsSuccessStatusCode)
+        {
+            matToaster.Add($"The \"{BoardModel.Title}\" board has been deleted", MatToastType.Warning, "Delete");
+        }
+        else
+        {
+            matToaster.Add($"The \"{BoardModel.Title}\" board could not be deleted", MatToastType.Danger, "Delete");
+        }
+
         IsOpen = false;
-
-        await Http.DeleteAsync($"api/taskboards/{boardId}");
-
         await OnSubmitCallback.InvokeAsync(this);
     }
 
     private async Task SubmitForm()
     {
-        await Http.PutAsJsonAsync<BlazorKanban.Shared.Board>($"api/taskboards/{BoardModel.Id}", BoardModel);
+        var response = await Http.PutAsJsonAsync<BlazorKanban.Shared.Board>($"api/taskboards/{BoardModel.Id}", BoardModel);
+
+        response.EnsureSuccessStatusCode();
+
+        if (response.IsSuccessStatusCode)
+        {
+            matToaster.Add($"The \"{BoardModel.Title}\" board has been updated", MatToastType.Success, "Update");
+        }
+        else
+        {
+            matToaster.Add($"The \"{BoardModel.Title}\" board could not be updated", MatToastType.Danger, "Update");
+        }
 
         IsOpen = false;
-
         await OnSubmitCallback.InvokeAsync(this);
     }
 }

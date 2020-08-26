@@ -1,6 +1,7 @@
 ﻿@attribute [Authorize]
 @page "/column/{columnid}"
 @inject HttpClient Http
+@inject IMatToaster matToaster
 @using BlazorKanban.Client.Pages.Cards
 
 @if (Column == null)
@@ -101,6 +102,7 @@ else
             await UpdatePositioningOnCardLeaveColumn(oldColumnId);
         }
 
+        matToaster.Add($"The \"{card.Title}\" card has been updated", MatToastType.Secondary, "Update");
         //Notify parent to render
         await OnSubmitCallback.InvokeAsync(this);
     }

@@ -1,6 +1,7 @@
 ﻿@attribute [Authorize]
 @page "/card/edit/{cardid}";
 @inject HttpClient Http
+@inject IMatToaster matToaster
 
 <MatDialog @bind-IsOpen="@IsOpen">
     <EditForm Model="@CardModel" OnValidSubmit="SubmitForm">
@@ -53,19 +54,37 @@
 
     private async Task Delete(string cardId)
     {
-        await Http.DeleteAsync($"api/taskcards/{cardId}");
+        var response = await Http.DeleteAsync($"api/taskcards/{cardId}");
+        response.EnsureSuccessStatusCode();
+
+        if (response.IsSuccessStatusCode)
+        {
+            matToaster.Add($"The \"{CardModel.Title}\" card has been deleted", MatToastType.Warning, "Delete");
+        }
+        else
+        {
+            matToaster.Add($"The \"{CardModel.Title}\" card could not be deleted", MatToastType.Danger, "Delete");
+        }
 
         IsOpen = false;
-
         await OnSubmitCallback.InvokeAsync(this);
     }
 
     private async Task SubmitForm()
     {
-        await Http.PutAsJsonAsync<BlazorKanban.Shared.Card>($"api/taskcards/{CardModel.Id}", CardModel);
+        var response = await Http.PutAsJsonAsync<BlazorKanban.Shared.Card>($"api/taskcards/{CardModel.Id}", CardModel);
+        response.EnsureSuccessStatusCode();
+
+        if (response.IsSuccessStatusCode)
+        {
+            matToaster.Add($"The \"{CardModel.Title}\" card has been updated", MatToastType.Success, "Update");
+        }
+        else
+        {
+            matToaster.Add($"The \"{CardModel.Title}\" card could not be updated", MatToastType.Danger, "Update");
+        }
 
         IsOpen = false;
-
         await OnSubmitCallback.InvokeAsync(this);
     }
 }
