@@ -32,7 +32,6 @@ else
             <MatBody2>
                 <Dropzone Id="@ComputeDropzoneId(Column.Id)"
                           Class="m-3 item-dropzone"
-                          Style="DragDropStyle.Custom"
                           Items="Column.Cards"
                           TItem="Card"
                           OnItemDrop="@(async (c) => await UpdateCard(c))"
